@@ -124,8 +124,7 @@ public class ToolboxPanel extends JPanel implements Utility {
     }
 
     public Utility getUtility(String name){
-        for (Utility value :
-                utilityList) {
+        for (Utility value : utilityList) {
             if (value.getUtilitiyName().equals(name)) return value;
         }
         return null;

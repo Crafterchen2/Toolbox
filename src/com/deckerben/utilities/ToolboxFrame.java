@@ -43,7 +43,6 @@ public class ToolboxFrame extends JFrame {
     }
 
     public static void main(String[] args){
-        System.out.println(Arrays.toString(args));
         new ToolboxFrame(args);
     }
 
