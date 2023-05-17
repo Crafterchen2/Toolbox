@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Toolbox:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Toolbox_jar</output-path>
+    <root id="archive" name="Toolbox.jar">
+      <element id="module-output" name="Toolbox" />
+      <element id="extracted-dir" path="$USER_HOME$/Documents/003 Java Programme/ProfileTransfer.jar" path-in-jar="/" />
+      <element id="library" level="project" name="ProfileTransfer" />
+    </root>
+  </artifact>
+</component>
