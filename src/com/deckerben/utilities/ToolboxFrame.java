@@ -20,7 +20,7 @@ public class ToolboxFrame extends JFrame {
         super();
         setSize(750,500);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         if (args.length == 0){
             setTitle("Toolbox");
             setContentPane(CONTENT_PANE);

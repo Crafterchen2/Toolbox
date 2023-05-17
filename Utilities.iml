@@ -7,6 +7,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="ProfileTransfer" level="project" />
+    <orderEntry type="library" exported="" name="ProfileTransfer" level="project" />
   </component>
 </module>

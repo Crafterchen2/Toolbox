@@ -10,7 +10,7 @@ public interface ConfigurableUtility extends Utility {
 
     JSONObject getConfigObject();
     default void save(){
-        ToolboxFrame.CONTENT_PANE.saveConfig(this.getUtilitiyName(),getConfigObject());
+        //ToolboxFrame.CONTENT_PANE.saveConfig(this.getUtilitiyName(),getConfigObject());
     }
     Component createNewInstance(JSONObject config);
 

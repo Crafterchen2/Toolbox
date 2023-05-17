@@ -13,8 +13,11 @@ import org.json.JSONObject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class ToolboxPanel extends JPanel implements Utility {
 
@@ -24,6 +27,7 @@ public class ToolboxPanel extends JPanel implements Utility {
 
     ////Components
     private final JTabbedPane tabs = new JTabbedPane(); //siehe kon: JTabbedPane(int tabPlacement, int tabLayoutPolicy) (tabLayoutPolicy sagt ob gescrollt wird oder nicht)
+    private final ArrayList<JFrame> framedUtils = new ArrayList<>();
 
     ////JSON
     private static final File CONFIG_FILE = new File(System.getProperty("user.home")+"/toolbox-config.json");
@@ -109,6 +113,24 @@ public class ToolboxPanel extends JPanel implements Utility {
         return rv;
     }
 
+    private void resetTabs(){
+        synchronized (tabs.getTreeLock()){
+            for (int tab = 0; tab < tabs.getTabCount(); tab++) {
+                ((Utility) tabs.getComponentAt(tab)).reset();
+            }
+        }
+    }
+
+    private void resetFramedUtils(){
+        framedUtils.forEach(jFrame -> ((Utility) jFrame.getContentPane()).reset());
+    }
+
+    private void removeFramedUtils(){
+        for (int frame = framedUtils.size()-1; (frame >= 0) && (!framedUtils.isEmpty()); frame--) {
+            framedUtils.get(frame).dispose();
+        }
+    }
+
     //Getter
     ////Code von Paul START
     private JSONObject getConfig(String utilityName){
@@ -143,11 +165,7 @@ public class ToolboxPanel extends JPanel implements Utility {
     ////Modifiziert von Paul
     private JMenuBar makeUtilityBar(){
         JMenuBar bar = new JMenuBar();
-        JMenu addMenu = new JMenu("Hinzufügen...");
-        JMenuItem resetAll = new JMenuItem("Alles Zurücksetzen");
-        resetAll.addActionListener(e -> reset());
-        addMenu.add(resetAll);
-        addMenu.addSeparator();
+        JMenu addMenu = new JMenu("Hinzufügen");
         UtilityMenuItem[] items = new UtilityMenuItem[utilityList.size()];
         for (int i = 0; i<utilityList.size(); i++) {
             items[i] = new UtilityMenuItem(i);
@@ -160,11 +178,45 @@ public class ToolboxPanel extends JPanel implements Utility {
                     tabs.addTab(item.getText(),getUtility(item.getUtilityID()).createNewInstance());
                 }
                 TabLabel tabLabel = new TabLabel(getUtility(item.getUtilityID()).getUtilitiyName(),tabs);
-                tabs.setTabComponentAt(tabs.getTabCount()-1,tabLabel.generateRecommendedPanel(true,new ResetTabButton(item.getUtilityID())));
+                TabButton[] tabButtons = new TabButton[2];
+                tabButtons[0] = new ResetTabButton(item.getUtilityID());
+                tabButtons[1] = new EjectTabButton();
+                tabs.setTabComponentAt(tabs.getTabCount()-1,tabLabel.generateRecommendedPanel(true,tabButtons));
                 tabs.updateUI();
             });
         }
         bar.add(addMenu);
+        JMenu resetMenu = new JMenu("Zurücksetzen");
+        JMenuItem resetToolbox = new JMenuItem("Toolbox zurücksetzen");
+        resetToolbox.addActionListener(e -> reset());
+        resetMenu.add(resetToolbox);
+        resetMenu.addSeparator();
+        JMenuItem resetAll = new JMenuItem("Alles zurücksetzen");
+        resetAll.addActionListener(e -> {
+            resetTabs();
+            removeFramedUtils();
+        });
+        resetMenu.add(resetAll);
+        resetMenu.addSeparator();
+        JMenuItem resetTabs = new JMenuItem("Tabs zurücksetzen");
+        resetTabs.addActionListener(e -> resetTabs());
+        resetMenu.add(resetTabs);
+        JMenuItem resetWindows = new JMenuItem("Externe Fenster zurücksetzen");
+        resetWindows.addActionListener(e -> resetFramedUtils());
+        resetMenu.add(resetWindows);
+        bar.add(resetMenu);
+        JMenu removeMenu = new JMenu("Entfernen");
+        JMenuItem removeAll = new JMenuItem("Alles entfernen");
+        removeAll.addActionListener(e -> reset());
+        removeMenu.add(removeAll);
+        removeMenu.addSeparator();
+        JMenuItem removeTabs = new JMenuItem("Tabs entfernen");
+        removeTabs.addActionListener(e -> tabs.removeAll());
+        removeMenu.add(removeTabs);
+        JMenuItem removeWindows = new JMenuItem("Fenster Entfernen");
+        removeWindows.addActionListener(e -> removeFramedUtils());
+        removeMenu.add(removeWindows);
+        bar.add(removeMenu);
         return bar;
     }
 
@@ -192,6 +244,7 @@ public class ToolboxPanel extends JPanel implements Utility {
     @Override
     public void resetCode() {
         tabs.removeAll();
+        removeFramedUtils();
         utilityList.forEach(Resettable::reset);
     }
 
@@ -236,7 +289,6 @@ public class ToolboxPanel extends JPanel implements Utility {
         //Konstruktoren
         public ResetTabButton(final int utilityID){
             super("↺");
-            //Felder
             addActionListener(e -> {
                 int i = tabs.indexOfTabComponent(tabComponent);
                 if (i > -1) {
@@ -244,8 +296,38 @@ public class ToolboxPanel extends JPanel implements Utility {
                     ((Utility)tabs.getComponent(i)).reset();
                 }
             });
-            setToolTipText("Setze diesen Tab zurück.");
+            setToolTipText("Setze diesen Tab zurück");
         }
 
+    }
+
+    ////Klasse "EjectTabButton"
+    private class EjectTabButton extends TabButton{
+
+        //Konstruktoren
+        public EjectTabButton(){
+            super("⏏");
+            setToolTipText("In seperatem Fenster öffnen");
+            addActionListener(e -> {
+                synchronized (tabs.getTreeLock()){
+                    int tabIndex = tabs.indexOfTabComponent(tabComponent);
+                    if (tabIndex != -1) {
+                        JFrame frame = new JFrame(tabs.getTitleAt(tabIndex)){
+                            @Override
+                            public void dispose() {
+                                framedUtils.remove(this);
+                                super.dispose();
+                            }
+                        };
+                        frame.setSize(tabs.getSize());
+                        frame.setLocationByPlatform(true);
+                        frame.setContentPane((Container) tabs.getComponent(tabIndex));
+                        frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                        frame.setVisible(true);
+                        framedUtils.add(frame);
+                    }
+                }
+            });
+        }
     }
 }

@@ -2,7 +2,7 @@
   <artifact type="jar" name="MessagePicturator:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/MessagePicturator_jar</output-path>
     <root id="archive" name="MessagePicturator.jar">
-      <element id="module-output" name="Toolbox" />
+      <element id="module-output" name="Utilities" />
     </root>
   </artifact>
 </component>
