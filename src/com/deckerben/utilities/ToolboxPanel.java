@@ -3,21 +3,15 @@ package com.deckerben.utilities;
 import com.deckerben.Resettable;
 import com.deckerben.component.tab.TabButton;
 import com.deckerben.component.tab.TabLabel;
-import com.deckerben.utilities.comtest.ComponentTester;
-import com.deckerpw.utilities.gamemode.GameMode;
-import com.deckerben.utilities.msgpics.component.MessagePicturatorPanel;
-import com.deckerpw.utilities.profiletransfer.ProfileTransferUtility;
 import com.deckerben.utilities.clicker.ClickerPanel;
-import com.deckerpw.utilities.ConfigurableUtility;
-import org.json.JSONObject;
+import com.deckerben.utilities.comtest.ComponentTester;
+import com.deckerben.utilities.msgpics.component.MessagePicturatorPanel;
+import com.deckerben.utilities.randombit.RandomBitPanel;
+import com.deckerben.utilities.selector.ChancePanel;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.*;
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 public class ToolboxPanel extends JPanel implements Utility {
 
@@ -29,10 +23,6 @@ public class ToolboxPanel extends JPanel implements Utility {
     private final JTabbedPane tabs = new JTabbedPane(); //siehe kon: JTabbedPane(int tabPlacement, int tabLayoutPolicy) (tabLayoutPolicy sagt ob gescrollt wird oder nicht)
     private final ArrayList<JFrame> framedUtils = new ArrayList<>();
 
-    ////JSON
-    private static final File CONFIG_FILE = new File(System.getProperty("user.home")+"/toolbox-config.json");
-    private final JSONObject CONFIGS;
-
     //Listener
 
     //Konstruktoren
@@ -42,7 +32,6 @@ public class ToolboxPanel extends JPanel implements Utility {
 
     public ToolboxPanel(boolean showBar){
         reset();
-        CONFIGS = loadConfig();
         setLayout(new BorderLayout());
         if (showBar) {
             JMenuBar utilityBar = makeUtilityBar();
@@ -52,67 +41,18 @@ public class ToolboxPanel extends JPanel implements Utility {
     }
 
     //Methoden
-    ////Code von Paul START
-    //////Speichern und Laden der JSON Datei
-    private JSONObject loadConfig() {
-        try {
-            return new JSONObject(readFile(CONFIG_FILE));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new JSONObject();
-        }
-    }
-
-    private String readFile(File file) throws IOException {
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
-
-            while (line != null) {
-                sb.append(line);
-                sb.append(System.lineSeparator());
-                line = br.readLine();
-            }
-            return sb.toString();
-        }
-    }
-
-    public void saveConfig(String utilityName,JSONObject config){
-        CONFIGS.put(utilityName,config);
-    }
-
-    public void saveConfigs(){
-        try {
-            FileWriter myWriter = new FileWriter(CONFIG_FILE);
-            myWriter.write(CONFIGS.toString());
-            myWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    ////Code von Paul ENDE
-
-    ////Hinzufügen von Utilities
-    public void addUtility(Utility util){
-        //utility zu Array "utilities" hinzufügen; "utilities" evtl. -> ArrayList
-        utilityList.add(util); //Noch unsicher
-        updateUtilityList();
-    }
-
-    private void updateUtilityList(){
-
-    }
-
+    ////Erstellen der Utility-liste
     private ArrayList<Utility> createInitialUtilityList(){
         ArrayList<Utility> rv = new ArrayList<>(5);
         rv.add(new MessagePicturatorPanel());
         rv.add(new ComponentTester());
-        rv.add(new ProfileTransferUtility());
         rv.add(new ClickerPanel());
-        rv.add(new GameMode());
+        rv.add(new ChancePanel());
+        rv.add(new RandomBitPanel());
         return rv;
     }
 
+    ////Resetting
     private void resetTabs(){
         synchronized (tabs.getTreeLock()){
             for (int tab = 0; tab < tabs.getTabCount(); tab++) {
@@ -125,6 +65,12 @@ public class ToolboxPanel extends JPanel implements Utility {
         framedUtils.forEach(jFrame -> ((Utility) jFrame.getContentPane()).reset());
     }
 
+    private void resetAll() {
+        resetTabs();
+        removeFramedUtils();
+    }
+
+    ////Removing
     private void removeFramedUtils(){
         for (int frame = framedUtils.size()-1; (frame >= 0) && (!framedUtils.isEmpty()); frame--) {
             framedUtils.get(frame).dispose();
@@ -132,15 +78,6 @@ public class ToolboxPanel extends JPanel implements Utility {
     }
 
     //Getter
-    ////Code von Paul START
-    private JSONObject getConfig(String utilityName){
-        if (CONFIGS.has(utilityName))
-            return CONFIGS.getJSONObject(utilityName);
-        else
-            return new JSONObject();
-    }
-    ////Code von Paul ENDE
-
     public Utility getUtility(int id){
         return utilityList.get(id);
     }
@@ -157,12 +94,8 @@ public class ToolboxPanel extends JPanel implements Utility {
     }
 
     //Setter
-    public void setUtilityList(ArrayList<Utility> utilityList) {
-        this.utilityList = utilityList;
-    }
 
     //Maker
-    ////Modifiziert von Paul
     private JMenuBar makeUtilityBar(){
         JMenuBar bar = new JMenuBar();
         JMenu addMenu = new JMenu("Hinzufügen");
@@ -171,18 +104,16 @@ public class ToolboxPanel extends JPanel implements Utility {
             items[i] = new UtilityMenuItem(i);
             addMenu.add(items[i]);
             items[i].addActionListener(e -> {
-                UtilityMenuItem item = (UtilityMenuItem) e.getSource();
-                if (getUtility(item.getUtilityID()) instanceof ConfigurableUtility configUtility) {
-                    tabs.addTab(item.getText(),configUtility.createNewInstance(getConfig(getUtility(item.getUtilityID()).getUtilitiyName())));
-                } else {
+                synchronized (tabs.getTreeLock()){
+                    UtilityMenuItem item = (UtilityMenuItem) e.getSource();
                     tabs.addTab(item.getText(),getUtility(item.getUtilityID()).createNewInstance());
+                    TabLabel tabLabel = new TabLabel(getUtility(item.getUtilityID()).getUtilitiyName(),tabs);
+                    TabButton[] tabButtons = new TabButton[2];
+                    tabButtons[0] = new ResetTabButton(item.getUtilityID());
+                    tabButtons[1] = new EjectTabButton();
+                    tabs.setTabComponentAt(tabs.getTabCount()-1,tabLabel.generateRecommendedPanel(true,tabButtons));
+                    tabs.updateUI();
                 }
-                TabLabel tabLabel = new TabLabel(getUtility(item.getUtilityID()).getUtilitiyName(),tabs);
-                TabButton[] tabButtons = new TabButton[2];
-                tabButtons[0] = new ResetTabButton(item.getUtilityID());
-                tabButtons[1] = new EjectTabButton();
-                tabs.setTabComponentAt(tabs.getTabCount()-1,tabLabel.generateRecommendedPanel(true,tabButtons));
-                tabs.updateUI();
             });
         }
         bar.add(addMenu);
@@ -192,10 +123,7 @@ public class ToolboxPanel extends JPanel implements Utility {
         resetMenu.add(resetToolbox);
         resetMenu.addSeparator();
         JMenuItem resetAll = new JMenuItem("Alles zurücksetzen");
-        resetAll.addActionListener(e -> {
-            resetTabs();
-            removeFramedUtils();
-        });
+        resetAll.addActionListener(e -> resetAll());
         resetMenu.add(resetAll);
         resetMenu.addSeparator();
         JMenuItem resetTabs = new JMenuItem("Tabs zurücksetzen");

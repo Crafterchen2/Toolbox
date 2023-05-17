@@ -1,32 +1,23 @@
 package com.deckerben.utilities.comtest;
 
 import com.deckerben.component.SimpleImagePainter;
-import com.deckerpw.utilities.ConfigurableUtility;
-import org.json.JSONObject;
+import com.deckerben.utilities.Utility;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Enumeration;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
-public class ComponentTester extends JPanel implements ConfigurableUtility {
+public class ComponentTester extends JPanel implements Utility {
 
-    JSONObject config;
-    private Dimension size = new Dimension(200,200);
-    private SimpleImagePainter painter = new SimpleImagePainter((BufferedImage) collageImage(genRandomImage(4,size),size));
+    //Felder
+    private final Dimension size = new Dimension(200,200);
+    private final SimpleImagePainter painter = new SimpleImagePainter((BufferedImage) collageImage(genRandomImage(4,size),size));
 
     //Konstruktor
     public ComponentTester(){
         setLayout(null);
         painter.setBounds(50,50,size.width,size.height);
         add(painter);
-
-        //bingCode();
     }
 
     public static Image[] genRandomImage(int num, Dimension imgSize){
@@ -58,46 +49,6 @@ public class ComponentTester extends JPanel implements ConfigurableUtility {
         return collage;
     }
 
-    private static void bingCode() {
-        //Code von Bing START
-        try {
-            // Get the path of the jar file
-            String pathToJar = "C:/Users/decke/IdeaProjects/StackomatV2/out/artifacts/StackomatV2_jar/StackomatExec.jar";
-            // Create a URL for the jar file
-            URL jarFileURL = new File(pathToJar).toURI().toURL();
-            // Create a URLClassLoader with the jar file URL
-            URLClassLoader loader = new URLClassLoader(new URL[] {jarFileURL});
-            // Create a JarFile object for the jar file
-            JarFile jarFile = new JarFile(pathToJar);
-            // Get an enumeration of the entries in the jar file
-            Enumeration<JarEntry> entries = jarFile.entries();
-            // Loop through each entry and load the class
-            while (entries.hasMoreElements()) {
-                // Get the name of the entry
-                String name = entries.nextElement().getName();
-                // Check if it is a class file
-                if (name.endsWith(".class")) {
-                    // Remove the .class extension
-                    name = name.substring(0, name.length() - 6);
-                    // Replace / with . to get the fully qualified class name
-                    name = name.replace('/', '.');
-                    // Load the class from the jar file
-                    Class<?> clazz = loader.loadClass(name);
-                    // Print the class name
-                    System.out.println(clazz.getName());
-                }
-            }
-            loader.loadClass("com.deckerben.stackomat.StackomatExec").getMethod("main",String[].class).invoke(null,(Object) null);
-            // Close the loader and the jar file
-            loader.close();
-            jarFile.close();
-        }   catch (Exception e) {
-            e.printStackTrace();
-        }
-        //Code von Bing ENDE
-    }
-
-
     //Overrides von Resettable
     @Override
     public boolean canReset() {
@@ -123,14 +74,7 @@ public class ComponentTester extends JPanel implements ConfigurableUtility {
     }
 
     @Override
-    public Component createNewInstance(JSONObject config) {
-        /*this.config = config;
-        config.append("TEST","HALLO");
-        save();*/
+    public Component createNewInstance() {
         return new ComponentTester();
-    }
-
-    public JSONObject getConfigObject() {
-        return config;
     }
 }

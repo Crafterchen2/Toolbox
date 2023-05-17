@@ -2,12 +2,15 @@ package com.deckerben.utilities;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 
 public class ToolboxFrame extends JFrame {
 
-    public static final ToolboxPanel CONTENT_PANE = new ToolboxPanel();
+    //Felder
+    private static final ToolboxPanel CONTENT_PANE = new ToolboxPanel();
 
+    //Listener
+
+    //Konstruktoren
     public ToolboxFrame(){
         this(new String[0]);
     }
@@ -42,13 +45,20 @@ public class ToolboxFrame extends JFrame {
         setVisible(true);
     }
 
+    //Methoden
     public static void main(String[] args){
         new ToolboxFrame(args);
     }
 
-    @Override
-    public void dispose() {
-        CONTENT_PANE.saveConfigs();
-        super.dispose();
-    }
+    //Getter
+
+    //Setter
+
+    //Maker
+
+    //Overrides aus
+    ////<Oberklasse>
+
+    //Interne Klassen
+    ////Klasse "<Klassenname>"
 }
