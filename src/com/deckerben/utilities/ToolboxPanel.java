@@ -187,9 +187,15 @@ public class ToolboxPanel extends JPanel implements Utility {
         }
         bar.add(addMenu);
         JMenu resetMenu = new JMenu("Zurücksetzen");
-        JMenuItem resetAll = new JMenuItem("Toolbox zurücksetzen");
-        resetAll.setToolTipText("Schließt alle Tabs und Fenster");
-        resetAll.addActionListener(e -> reset());
+        JMenuItem resetToolbox = new JMenuItem("Toolbox zurücksetzen");
+        resetToolbox.addActionListener(e -> reset());
+        resetMenu.add(resetToolbox);
+        resetMenu.addSeparator();
+        JMenuItem resetAll = new JMenuItem("Alles zurücksetzen");
+        resetAll.addActionListener(e -> {
+            resetTabs();
+            removeFramedUtils();
+        });
         resetMenu.add(resetAll);
         resetMenu.addSeparator();
         JMenuItem resetTabs = new JMenuItem("Tabs zurücksetzen");

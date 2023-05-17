@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="ProfileTransfer">
     <CLASSES>
-      <root url="jar://$USER_HOME$/Documents/003 Java Programme/ProfileTransfer.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/ProfileTransfer.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
