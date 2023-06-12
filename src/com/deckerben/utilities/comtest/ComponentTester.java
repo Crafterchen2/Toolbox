@@ -1,6 +1,7 @@
 package com.deckerben.utilities.comtest;
 
 import com.deckerben.component.SimpleImagePainter;
+import com.deckerben.component.layout.VerticalListLayout;
 import com.deckerben.utilities.Utility;
 
 import javax.swing.*;
@@ -9,47 +10,44 @@ import java.awt.image.BufferedImage;
 
 public class ComponentTester extends JPanel implements Utility {
 
+    private final JPanel pane;
     //Felder
-    private final Dimension size = new Dimension(200,200);
-    private final SimpleImagePainter painter = new SimpleImagePainter((BufferedImage) collageImage(genRandomImage(4,size),size));
+    private VerticalListLayout layout = new VerticalListLayout();
 
-    //Konstruktor
+    //Konstruktoren
     public ComponentTester(){
-        setLayout(null);
-        painter.setBounds(50,50,size.width,size.height);
-        add(painter);
+        pane = new JPanel();
+        pane.setLayout(layout);
+        setLayout(new GridLayout(1,1));
+        JButton[] buttons = new JButton[4];
+        buttons[0] = new JButton("/\\");
+        buttons[0].addActionListener(e -> {
+            layout.setVgap(layout.getVgap() + 1);
+            pane.updateUI();
+        });
+        buttons[1] = new JButton("\\/");
+        buttons[1].addActionListener(e -> {
+            layout.setVgap(layout.getVgap() - 1);
+            pane.updateUI();
+        });
+        buttons[2] = new JButton("wc");
+        buttons[2].addActionListener(e -> {
+            layout.setWidthMode((layout.getWidthMode() + 1)%3);
+            pane.updateUI();
+        });
+        buttons[3] = new JButton("hc");
+        buttons[3].addActionListener(e -> {
+            layout.setHeightMode((layout.getHeightMode() + 1)%3);
+            pane.updateUI();
+        });
+        for (JButton value : buttons) pane.add(value);
+        add(new JScrollPane(pane));
     }
 
-    public static Image[] genRandomImage(int num, Dimension imgSize){
-        Image[] images = new BufferedImage[num];
-        Graphics g;
-        for (int i = 0; i < num; i++){
-            images[i] = new BufferedImage(imgSize.width,imgSize.height,BufferedImage.TYPE_INT_RGB);
-            g = images[i].getGraphics();
-            g.setColor(new Color((int)((Math.random())*16777215)));
-            g.fillRect(0,0, imgSize.width, imgSize.height);
-            g.dispose();
-        }
-        return images;
-    }
+    //Methoden
 
-    public static Image collageImage(Image[] inputs, Dimension outputSize){
-        Image collage = new BufferedImage(outputSize.width,outputSize.height,BufferedImage.TYPE_INT_RGB);
-        Graphics g = collage.getGraphics();
-        int rowLength = (int)Math.ceil(Math.sqrt(inputs.length));   //Rastergröße ermitteln, wird immer Quadrat
-        Dimension imgageSize = new Dimension((int)Math.ceil((double)outputSize.width/(double)rowLength), (int)Math.ceil((double)outputSize.height/(double)rowLength));
-        int activeImage = 0;
-        for (int y = 0; y < rowLength && activeImage < inputs.length; y++){
-            for (int x = 0; x <rowLength && activeImage < inputs.length; x++){
-                g.drawImage(inputs[activeImage],x* imgageSize.width,y* imgageSize.width,imgageSize.width, imgageSize.height, null);
-                activeImage++;
-            }
-        }
-        g.dispose();
-        return collage;
-    }
-
-    //Overrides von Resettable
+    //Overrides aus
+    ////Resettable
     @Override
     public boolean canReset() {
         return true;
@@ -57,12 +55,13 @@ public class ComponentTester extends JPanel implements Utility {
 
     @Override
     public void resetCode() {
-        painter.setImage((BufferedImage) collageImage(genRandomImage(9,size),size));
-        painter.updateUI();
-        updateUI();
+        layout.setVgap(0);
+        layout.setWidthMode(2);
+        layout.setHeightMode(2);
+        pane.updateUI();
     }
 
-    //Overrides von Utility
+    ////Utility
     @Override
     public String getUtilitiyName() {
         return "ComponentTester";

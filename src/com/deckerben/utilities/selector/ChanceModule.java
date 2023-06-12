@@ -9,45 +9,39 @@ import java.awt.*;
 public class ChanceModule extends JComponent implements Resettable {
 
     //Felder
-    private static final Color SELECTED_COLOR = Color.YELLOW;
-    private static final Color DEFAULT_COLOR = Color.WHITE;
+    public static final Color SELECTED_COLOR = Color.YELLOW;
+    public static final Color DEFAULT_COLOR = Color.WHITE;
 
     private final SpinnerNumberModel amountModel = new SpinnerNumberModel(1,1,Integer.MAX_VALUE,1);
-    private final JSpinner amountSpinner = new JSpinner(amountModel);
 
     private final JTextField nameField = new JTextField();
 
-    private final JPanel parent;
-
-    private ChanceModule me = null;
+    private final JComponent parent;
 
     private int lowerChance = 0;
-
     //Listener
 
     //Konstruktoren
-    public ChanceModule(JPanel parent){
+    public ChanceModule(JComponent parent){
         //Parameter
         this.parent = parent;
         //Reset
         reset();
         //Layout
         setLayout(new BorderLayout());
+        JSpinner amountSpinner = new JSpinner(amountModel);
         add(amountSpinner,BorderLayout.WEST);
         add(nameField,BorderLayout.CENTER);
         JButton deleteButton = new JButton("X");
         add(deleteButton,BorderLayout.EAST);
         //Listener Zuweisen
         deleteButton.addActionListener(ae -> {
-            parent.remove(me);
+            parent.remove(this);
             parent.updateUI();
         });
-        amountSpinner.addChangeListener(ce -> parent.updateUI());
         //Einstellungen
         setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
         deleteButton.setToolTipText("Lösche diesen Eintrag.");
-        //Selbstreferenz
-        me = this;
     }
 
     //Methoden
@@ -90,7 +84,7 @@ public class ChanceModule extends JComponent implements Resettable {
 
     @Override
     public void resetCode() {
-        amountSpinner.setValue(1);
+        amountModel.setValue(1);
         resetColor();
         nameField.setText("Element "+(parent.getComponentCount()+1));
         lowerChance = 0;

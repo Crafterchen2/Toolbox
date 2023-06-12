@@ -17,7 +17,7 @@ public class ToolboxPanel extends JPanel implements Utility {
 
     //Felder
     ////Utilityliste
-    private ArrayList<Utility> utilityList = createInitialUtilityList();
+    private final ArrayList<Utility> utilityList = createInitialUtilityList();
 
     ////Components
     private final JTabbedPane tabs = new JTabbedPane(); //siehe kon: JTabbedPane(int tabPlacement, int tabLayoutPolicy) (tabLayoutPolicy sagt ob gescrollt wird oder nicht)

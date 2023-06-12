@@ -34,7 +34,7 @@ public class ChancePanel extends JPanel implements Utility {
             setAddChanceTooltip();
             addPanel.updateUI();
         });
-        addAmountSpinner.setToolTipText("Wie viele Einträge hinzugefügt werden sollen (maximal"+addAmountModel.getMaximum()+"Einträge pro Knopfdruck)");
+        addAmountSpinner.setToolTipText("Wie viele Einträge hinzugefügt werden sollen (maximal "+addAmountModel.getMaximum()+" Einträge pro Knopfdruck)");
         addPanel.add(addAmountSpinner, BorderLayout.CENTER);
         addChance.addActionListener(ae -> {
             for (int i = 0; i < getSpinnerValue(); i++) {
@@ -96,7 +96,6 @@ public class ChancePanel extends JPanel implements Utility {
                             } else {
                                 lowerChance = modules[i].getLowerChance();
                             }
-
                             if (lowerChance < rng && rng <= Objects.requireNonNull(modules[i]).getUpperChance()) {
                                 selectedNr = i;
                                 run = false;

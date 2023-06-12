@@ -10,17 +10,19 @@ import java.util.HexFormat;
 
 public class RandomBitPanel extends JPanel implements Utility {
 
+    //Felder
     private final SpinnerNumberModel amountModel = new SpinnerNumberModel();
     private final JSpinner amountSpinner = new JSpinner(amountModel);
 
     private final JButton generateButton = new JButton();
 
-    private final JButton copyButton = new JButton("In Zwischenablage kopieren");
+    private final JButton copyButton = new JButton("⎘");
 
     private long decValue = 0;
     private String hexValue = "";
     private final HexFormat hexFormat = HexFormat.of().withUpperCase();
 
+    //Konstruktoren
     public RandomBitPanel(){
         //Super
         super(new BorderLayout());
@@ -32,13 +34,14 @@ public class RandomBitPanel extends JPanel implements Utility {
         add(settingPanel,BorderLayout.NORTH);
         add(generateButton, BorderLayout.CENTER);
         JPanel copyPanel = new JPanel(new BorderLayout());
-        copyPanel.add(copyButton,BorderLayout.CENTER);
+        copyPanel.add(copyButton,BorderLayout.EAST);
         JComboBox<String> formatSelector = new JComboBox<>();
-        copyPanel.add(formatSelector,BorderLayout.WEST);     //TODO Kopierfunktion von Vorberereitung realisieren
+        copyPanel.add(formatSelector,BorderLayout.CENTER);     //TODO Layout rework
+        settingPanel.add(copyPanel, BorderLayout.SOUTH);
         //Einstellungen
 
-        amountModel.setMinimum(make1Integer());
-        amountModel.setStepSize(make1Integer());
+        amountModel.setMinimum(1);
+        amountModel.setStepSize(1);
         generateButton.addActionListener(ae -> {
             generateButton.setText(generateBits(amountModel.getNumber().intValue()));
             copyButton.setEnabled(true);
@@ -50,6 +53,7 @@ public class RandomBitPanel extends JPanel implements Utility {
         reset();
     }
 
+    //Methoden
     private void copyToClipboard(String toBeCopied){
         Clipboard clip = Toolkit.getDefaultToolkit().getSystemClipboard();
         StringSelection sel = new StringSelection(toBeCopied);
@@ -74,14 +78,6 @@ public class RandomBitPanel extends JPanel implements Utility {
         return rv.toString().trim();
     }
 
-    private Integer make1Integer(){
-        return makeInteger(1);
-    }
-
-    private Integer makeInteger(int value){
-        return value;
-    }
-
     //Overrides aus
     ////Resettable
     @Override
@@ -91,7 +87,7 @@ public class RandomBitPanel extends JPanel implements Utility {
 
     @Override
     public void resetCode() {
-        amountSpinner.setValue(makeInteger(8));
+        amountSpinner.setValue(8);
         generateButton.setText("Generieren");
         copyButton.setEnabled(false);
         decValue = 0;

@@ -7,15 +7,16 @@ import java.awt.LayoutManager;
 
 public class VerticalListLayout implements LayoutManager{
 
+    //Felder
     public static final int MAXIMUM = 0;
     public static final int PREFERRED = 1;
     public static final int MINIMUM = 2;
 
-    private final int vgap;
-    private final int widthSize;
-    private final int heightSize;
+    private int vgap;
+    private int widthMode;
+    private int heightMode;
 
-
+    //Konstruktoren
     public VerticalListLayout() {
         this(0);
     }
@@ -25,12 +26,89 @@ public class VerticalListLayout implements LayoutManager{
         this(vgap, MAXIMUM, PREFERRED);
     }
 
-    public VerticalListLayout(int vgap, int widthSize, int heightSize){
+    public VerticalListLayout(int vgap, int widthMode, int heightMode){
         this.vgap = vgap;
-        this.widthSize = widthSize;
-        this.heightSize = heightSize;
+        this.widthMode = widthMode;
+        this.heightMode = heightMode;
     }
 
+    //Methoden
+    private Dimension findMaxPreferredSize(Container parent){
+        return findMaxPreferredSize(parent.getComponents());
+    }
+
+    private Dimension findMaxMinimumSize(Container parent){
+        return findMaxMinimumSize(parent.getComponents());
+    }
+
+    private Dimension findMaxMaximumSize(Container parent){
+        Insets ins = parent.getInsets();
+        Dimension size = parent.getSize();
+        size.height = size.height-ins.bottom-ins.top;
+        size.width = size.width-ins.left-ins.right;
+        return size;
+    }
+
+    private Dimension findMaxPreferredSize(Component[] coms){
+        Dimension rv = new Dimension(0,0);
+        for (Component com : coms) {
+            rv.height = Math.max(rv.height, com.getPreferredSize().height);
+            rv.width = Math.max(rv.width, com.getPreferredSize().width);
+        }
+        return rv;
+    }
+
+    private Dimension findMaxMinimumSize(Component[] coms){
+        Dimension rv = new Dimension(0,0);
+        for (Component com : coms) {
+            rv.height = Math.max(rv.height, com.getMinimumSize().height);
+            rv.width = Math.max(rv.width, com.getMinimumSize().width);
+        }
+        return rv;
+    }
+
+    //Getter
+    public int getVgap() {
+        return vgap;
+    }
+
+    public int getWidthMode() {
+        return widthMode;
+    }
+
+    public int getHeightMode() {
+        return heightMode;
+    }
+
+    //Setter
+
+    /**
+     * Updates the vertical gap. You may need to update your UI for it to take effect.
+     * @param vgap The new vertical gap.
+     */
+    public void setVgap(int vgap) {
+        this.vgap = vgap;
+
+    }
+
+    /**
+     * Updates the width mode. You may need to update your UI for it to take effect.
+     * @param widthMode the new width mode.
+     */
+    public void setWidthMode(int widthMode) {
+        this.widthMode = widthMode;
+    }
+
+    /**
+     * Updates the height mode. You may need to update your UI for it to take effect.
+     * @param heightMode the new height mode.
+     */
+    public void setHeightMode(int heightMode) {
+        this.heightMode = heightMode;
+    }
+
+    //Overrides aus
+    ////LayoutManager
     public void addLayoutComponent(String name, Component comp) {
 
     }
@@ -65,13 +143,13 @@ public class VerticalListLayout implements LayoutManager{
                 return;
             }
             Component[] coms = parent.getComponents();
-            Dimension w = switch (widthSize) {
+            Dimension w = switch (widthMode) {
                 case MAXIMUM -> findMaxMaximumSize(parent);
                 case PREFERRED -> findMaxPreferredSize(parent);
                 case MINIMUM -> findMaxMinimumSize(parent);
                 default -> new Dimension(10, 0);
             };
-            Dimension h = switch (heightSize) {
+            Dimension h = switch (heightMode) {
                 case MAXIMUM -> findMaxMaximumSize(parent);
                 case PREFERRED -> findMaxPreferredSize(parent);
                 case MINIMUM -> findMaxMinimumSize(parent);
@@ -83,39 +161,4 @@ public class VerticalListLayout implements LayoutManager{
             } // end of for
         }
     }
-
-    private Dimension findMaxPreferredSize(Container parent){
-        return findMaxPreferredSize(parent.getComponents());
-    }
-
-    private Dimension findMaxMinimumSize(Container parent){
-        return findMaxMinimumSize(parent.getComponents());
-    }
-
-    private Dimension findMaxMaximumSize(Container parent){
-        Insets ins = parent.getInsets();
-        Dimension size = parent.getSize();
-        size.height = size.height-ins.bottom-ins.top;
-        size.width = size.width-ins.left-ins.right;
-        return size;
-    }
-
-    private Dimension findMaxPreferredSize(Component[] coms){
-        Dimension rv = new Dimension(0,0);
-        for (Component com : coms) {
-            rv.height = Math.max(rv.height, com.getPreferredSize().height);
-            rv.width = Math.max(rv.width, com.getPreferredSize().width);
-        } // end of for
-        return rv;
-    }
-
-    private Dimension findMaxMinimumSize(Component[] coms){
-        Dimension rv = new Dimension(0,0);
-        for (Component com : coms) {
-            rv.height = Math.max(rv.height, com.getMinimumSize().height);
-            rv.width = Math.max(rv.width, com.getMinimumSize().width);
-        } // end of for
-        return rv;
-    }
-
 }
