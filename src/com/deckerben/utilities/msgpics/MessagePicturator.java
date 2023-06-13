@@ -17,6 +17,7 @@ public class MessagePicturator implements Resettable {
         reset();
     }
 
+    @SuppressWarnings("unused")
     public MessagePicturator(Dimension newPreferredRatio){
         resetCode(newPreferredRatio);
     }
@@ -84,6 +85,7 @@ public class MessagePicturator implements Resettable {
         return Math.max((int) Math.ceil(msg.length()/3.0),1);
     }
 
+    @SuppressWarnings("unused")
     public Dimension getPreferredRatio() {
         return preferredRatio;
     }

@@ -34,8 +34,7 @@ public class ToolboxPanel extends JPanel implements Utility {
         reset();
         setLayout(new BorderLayout());
         if (showBar) {
-            JMenuBar utilityBar = makeUtilityBar();
-            add(utilityBar,BorderLayout.NORTH);
+            add(makeUtilityBar(),BorderLayout.NORTH);
         }
         add(tabs,BorderLayout.CENTER);
     }
@@ -119,10 +118,12 @@ public class ToolboxPanel extends JPanel implements Utility {
         bar.add(addMenu);
         JMenu resetMenu = new JMenu("Zurücksetzen");
         JMenuItem resetToolbox = new JMenuItem("Toolbox zurücksetzen");
+        resetToolbox.setToolTipText("Setzt die gesamte Toolbox auf den Ursprungszustand zurück.");
         resetToolbox.addActionListener(e -> reset());
         resetMenu.add(resetToolbox);
         resetMenu.addSeparator();
         JMenuItem resetAll = new JMenuItem("Alles zurücksetzen");
+        resetAll.setToolTipText("Setzt jeden Tab und jedes externe Fenster zurück, ohne sie zu schließen.");
         resetAll.addActionListener(e -> resetAll());
         resetMenu.add(resetAll);
         resetMenu.addSeparator();
@@ -141,7 +142,7 @@ public class ToolboxPanel extends JPanel implements Utility {
         JMenuItem removeTabs = new JMenuItem("Tabs entfernen");
         removeTabs.addActionListener(e -> tabs.removeAll());
         removeMenu.add(removeTabs);
-        JMenuItem removeWindows = new JMenuItem("Fenster Entfernen");
+        JMenuItem removeWindows = new JMenuItem("Externe Fenster Entfernen");
         removeWindows.addActionListener(e -> removeFramedUtils());
         removeMenu.add(removeWindows);
         bar.add(removeMenu);

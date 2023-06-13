@@ -6,21 +6,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.util.HexFormat;
 
 public class RandomBitPanel extends JPanel implements Utility {
 
     //Felder
     private final SpinnerNumberModel amountModel = new SpinnerNumberModel();
-    private final JSpinner amountSpinner = new JSpinner(amountModel);
 
-    private final JButton generateButton = new JButton();
-
+    private final JTextArea outputArea = new JTextArea();
     private final JButton copyButton = new JButton("⎘");
-
-    private long decValue = 0;
-    private String hexValue = "";
-    private final HexFormat hexFormat = HexFormat.of().withUpperCase();
 
     //Konstruktoren
     public RandomBitPanel(){
@@ -28,25 +21,32 @@ public class RandomBitPanel extends JPanel implements Utility {
         super(new BorderLayout());
         //Layout
         JPanel settingPanel = new JPanel(new BorderLayout());
+        JSpinner amountSpinner = new JSpinner(amountModel);
         settingPanel.add(amountSpinner,BorderLayout.CENTER);
         JButton resetButton = new JButton("Reset");
         settingPanel.add(resetButton,BorderLayout.EAST);
+        JButton generateButton = new JButton();
         add(settingPanel,BorderLayout.NORTH);
-        add(generateButton, BorderLayout.CENTER);
+        add(outputArea,BorderLayout.CENTER);
         JPanel copyPanel = new JPanel(new BorderLayout());
         copyPanel.add(copyButton,BorderLayout.EAST);
-        JComboBox<String> formatSelector = new JComboBox<>();
-        copyPanel.add(formatSelector,BorderLayout.CENTER);     //TODO Layout rework
+        copyPanel.add(generateButton,BorderLayout.CENTER);
         settingPanel.add(copyPanel, BorderLayout.SOUTH);
         //Einstellungen
-
+        generateButton.setText("Generieren");
+        copyButton.setFont(copyPanel.getFont().deriveFont(20f));
+        copyButton.setPreferredSize(new Dimension(resetButton.getPreferredSize().width,copyButton.getPreferredSize().height));
+        outputArea.setLineWrap(true);
+        outputArea.setWrapStyleWord(true);
+        outputArea.setEditable(false);
+        outputArea.setBorder(BorderFactory.createLoweredBevelBorder());
         amountModel.setMinimum(1);
         amountModel.setStepSize(1);
         generateButton.addActionListener(ae -> {
-            generateButton.setText(generateBits(amountModel.getNumber().intValue()));
+            outputArea.setText(generateBits(amountModel.getNumber().intValue()));
             copyButton.setEnabled(true);
         });
-        copyButton.addActionListener(ae -> copyToClipboard(generateButton.getText()));
+        copyButton.addActionListener(ae -> copyToClipboard(outputArea.getText()));
         resetButton.addActionListener(ae -> reset());
         generateButton.setMargin(new Insets(1,1,1,1));
         //Reset
@@ -63,18 +63,13 @@ public class RandomBitPanel extends JPanel implements Utility {
     private String generateBits(int length){
         StringBuilder rv = new StringBuilder();
         long bit;
-        long powerBit;
-        decValue = 0;
         for (int i = Math.abs(4-length%4); i<(length+Math.abs(4-length%4)); i++) {
             if (i%4 == 0) {
                 rv.append(" ");
             }
             bit = (long)(Math.random()*2);
-            powerBit = bit * (long) Math.pow(2,i-Math.abs(4-length%4));
-            decValue = decValue + powerBit;
             rv.append(bit);
         }
-        hexValue = hexFormat.toHexDigits(decValue);
         return rv.toString().trim();
     }
 
@@ -87,11 +82,9 @@ public class RandomBitPanel extends JPanel implements Utility {
 
     @Override
     public void resetCode() {
-        amountSpinner.setValue(8);
-        generateButton.setText("Generieren");
+        outputArea.setText("");
+        amountModel.setValue(8);
         copyButton.setEnabled(false);
-        decValue = 0;
-        hexValue = "";
     }
 
     ////Utility

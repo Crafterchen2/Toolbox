@@ -8,11 +8,13 @@ public class TabLabel extends JLabel {
     private final JTabbedPane pane;
     private String text;
 
+    @SuppressWarnings("unused")
     public TabLabel(String text, Icon icon, int horizontalAlignment, JTabbedPane pane) {
         super(text, icon, horizontalAlignment);
         this.pane = pane;
     }
 
+    @SuppressWarnings("unused")
     public TabLabel(String text, int horizontalAlignment, JTabbedPane pane) {
         super(text, horizontalAlignment);
         this.pane = pane;
@@ -23,16 +25,19 @@ public class TabLabel extends JLabel {
         this.pane = pane;
     }
 
+    @SuppressWarnings("unused")
     public TabLabel(Icon image, int horizontalAlignment, JTabbedPane pane) {
         super(image, horizontalAlignment);
         this.pane = pane;
     }
 
+    @SuppressWarnings("unused")
     public TabLabel(Icon image, JTabbedPane pane) {
         super(image);
         this.pane = pane;
     }
 
+    @SuppressWarnings("unused")
     public TabLabel(JTabbedPane pane) {
         this.pane = pane;
     }
@@ -73,15 +78,13 @@ public class TabLabel extends JLabel {
     public JPanel generateRecommendedPanel(boolean makeCloseButton, Component... otherComponents){
         JPanel rv = generateRecommendedPanel();
         rv.add(this);
-        if (otherComponents.length > 0){
-            for (Component value: otherComponents) {
-                try {
-                    TabButton tb = (TabButton) value;
-                    tb.setTabComponent(rv);
-                    rv.add(tb);
-                }   catch (Exception e) {
-                    rv.add(value);
-                }
+        for (Component value : otherComponents) {
+            try {
+                TabButton tb = (TabButton) value;
+                tb.setTabComponent(rv);
+                rv.add(tb);
+            } catch (Exception e) {
+                rv.add(value);
             }
         }
         if (makeCloseButton) {

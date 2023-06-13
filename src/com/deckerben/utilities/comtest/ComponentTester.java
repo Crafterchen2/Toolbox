@@ -1,18 +1,16 @@
 package com.deckerben.utilities.comtest;
 
-import com.deckerben.component.SimpleImagePainter;
 import com.deckerben.component.layout.VerticalListLayout;
 import com.deckerben.utilities.Utility;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class ComponentTester extends JPanel implements Utility {
 
     private final JPanel pane;
     //Felder
-    private VerticalListLayout layout = new VerticalListLayout();
+    private final VerticalListLayout layout = new VerticalListLayout();
 
     //Konstruktoren
     public ComponentTester(){

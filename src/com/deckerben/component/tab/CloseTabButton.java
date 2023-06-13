@@ -14,24 +14,28 @@ public class CloseTabButton extends TabButton implements ActionListener {
         setup();
     }
 
+    @SuppressWarnings("unused")
     public CloseTabButton(String text, JTabbedPane pane) {
         super(text);
         this.pane = pane;
         setup();
     }
 
+    @SuppressWarnings("unused")
     public CloseTabButton(Icon icon, JTabbedPane pane) {
         super("X", icon);
         this.pane = pane;
         setup();
     }
 
+    @SuppressWarnings("unused")
     public CloseTabButton(Action a, JTabbedPane pane) {
         super(a);
         this.pane = pane;
         setup();
     }
 
+    @SuppressWarnings("unused")
     public CloseTabButton(String text, Icon icon, JTabbedPane pane) {
         super(text, icon);
         this.pane = pane;
@@ -51,6 +55,7 @@ public class CloseTabButton extends TabButton implements ActionListener {
         }
     }
 
+    @SuppressWarnings("unused")
     public JTabbedPane getTabbedPane() {
         return pane;
     }

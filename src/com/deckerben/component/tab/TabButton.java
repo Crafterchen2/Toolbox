@@ -9,28 +9,27 @@ import java.awt.event.MouseListener;
 
 public class TabButton extends JButton {
 
-    private JLabel sizeTester = new JLabel();
+    private final JLabel sizeTester = new JLabel();
 
     protected Component tabComponent = this;
 
     private final static MouseListener buttonMouseListener = new MouseAdapter() {
         public void mouseEntered(MouseEvent e) {
             Component component = e.getComponent();
-            if (component instanceof AbstractButton) {
-                AbstractButton button = (AbstractButton) component;
+            if (component instanceof AbstractButton button) {
                 button.setBorderPainted(true);
             }
         }
 
         public void mouseExited(MouseEvent e) {
             Component component = e.getComponent();
-            if (component instanceof AbstractButton) {
-                AbstractButton button = (AbstractButton) component;
+            if (component instanceof AbstractButton button) {
                 button.setBorderPainted(false);
             }
         }
     };
 
+    @SuppressWarnings("unused")
     public TabButton() {
         setup();
     }
@@ -40,6 +39,7 @@ public class TabButton extends JButton {
         setup();
     }
 
+    @SuppressWarnings("unused")
     public TabButton(Icon icon) {
         super(icon);
         setup();
@@ -56,7 +56,6 @@ public class TabButton extends JButton {
     }
 
     private void setup(){
-        int size = 17;
         sizeTester.setText(getText());
         updateSize();
         setUI(new BasicButtonUI());
@@ -72,7 +71,7 @@ public class TabButton extends JButton {
      public void setText(String text){
         try {
             sizeTester.setText(text);
-        }   catch (Exception e){
+        }   catch (Exception ignored){
 
         }
         super.setText(text);
@@ -82,6 +81,7 @@ public class TabButton extends JButton {
         setPreferredSize(new Dimension(Math.max(sizeTester.getMinimumSize().width+5,sizeTester.getMinimumSize().height), sizeTester.getMinimumSize().height));
      }
 
+    @SuppressWarnings("unused")
     public Component getTabComponent() {
         return tabComponent;
     }
