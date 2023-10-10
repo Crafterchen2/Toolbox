@@ -9,8 +9,6 @@ public interface Resettable {
         if (canReset()) resetCode();
     }
 
-    default void resetCode() { //hier Reset-Code
-
-    }
+    void resetCode();
 
 }
