@@ -66,7 +66,7 @@ public class ToolboxPanel extends JPanel implements Utility {
 
     private void resetAll() {
         resetTabs();
-        removeFramedUtils();
+        resetFramedUtils();
     }
 
     ////Removing
