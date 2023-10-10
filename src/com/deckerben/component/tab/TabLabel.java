@@ -67,7 +67,7 @@ public class TabLabel extends JLabel {
         return rv;
     }
 
-    /*
+    /**
     * Beispielhafte Nutzung:
     * TabLabel tabLabel = new TabLabel(aTabbedPane);
     * TabButton aTabButton = new TabButton("Knopf Nr.1");
