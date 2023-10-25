@@ -9,17 +9,20 @@ public class MessagePicturator implements Resettable {
 
     //Feld
     private Dimension preferredRatio;
+    private final Dimension resetRatio;
 
     //Listener
 
     //Konstruktoren
     public MessagePicturator(){
+        resetRatio = new Dimension(1,1);
         reset();
     }
 
     @SuppressWarnings("unused")
     public MessagePicturator(Dimension newPreferredRatio){
-        resetCode(newPreferredRatio);
+        resetRatio = new Dimension(newPreferredRatio);
+        reset();
     }
 
     //Methoden
@@ -106,13 +109,7 @@ public class MessagePicturator implements Resettable {
 
     @Override
     public void resetCode(){
-        resetCode(new Dimension(1,1));
-    }
-
-    public void resetCode(Dimension newPreferredRatio){
-        if (canReset()) {
-            preferredRatio = newPreferredRatio;
-        }
+        preferredRatio = resetRatio;
     }
 
 }
