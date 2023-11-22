@@ -2,12 +2,16 @@ package com.deckerben.utilities;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Arrays;
 
 public class ToolboxFrame extends JFrame {
 
-    public static final ToolboxPanel CONTENT_PANE = new ToolboxPanel();
+    //Felder
+    private static final ToolboxPanel CONTENT_PANE = new ToolboxPanel();
 
+    //Listener
+
+    //Konstruktoren
+    @SuppressWarnings("unused")
     public ToolboxFrame(){
         this(new String[0]);
     }
@@ -19,13 +23,19 @@ public class ToolboxFrame extends JFrame {
     public ToolboxFrame(String[] args, int iterator){
         super();
         setSize(750,500);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         if (args.length == 0){
+            setLocationRelativeTo(null);
+            setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             setTitle("Toolbox");
             setContentPane(CONTENT_PANE);
             setMinimumSize(CONTENT_PANE.getMinimumSize());
         }   else {
+            if (iterator == 0) {
+                setLocationRelativeTo(null);
+            } else {
+                setLocationByPlatform(true);
+            }
+            setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             Utility util = CONTENT_PANE.getUtility(args[iterator]);
             try{
                 setTitle(util.getUtilitiyName());
@@ -42,13 +52,20 @@ public class ToolboxFrame extends JFrame {
         setVisible(true);
     }
 
+    //Methoden
     public static void main(String[] args){
         new ToolboxFrame(args);
     }
 
-    @Override
-    public void dispose() {
-        CONTENT_PANE.saveConfigs();
-        super.dispose();
-    }
+    //Getter
+
+    //Setter
+
+    //Maker
+
+    //Overrides aus
+    ////<Oberklasse>
+
+    //Interne Klassen
+    ////Klasse "<Klassenname>"
 }

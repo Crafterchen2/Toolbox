@@ -1,5 +1,6 @@
 package com.deckerben.utilities.msgpics.component;
 
+import com.deckerben.component.SimpleImagePainter;
 import com.deckerben.utilities.Utility;
 import com.deckerben.utilities.msgpics.MessagePicturator;
 
@@ -29,7 +30,7 @@ public class MessagePicturatorPanel extends JPanel implements Utility {
     private final MessagePicturator converter = new MessagePicturator();
 
     private final JTextArea msgIO = new JTextArea();
-    private final ConverterImagePainter imgIO = new ConverterImagePainter(getMsgToPicture(), false);
+    private final SimpleImagePainter imgIO = new SimpleImagePainter(getMsgToPicture(), false);
 
     private final SpinnerNumberModel widthModel = new SpinnerNumberModel(1,1,null,1);
     private final SpinnerNumberModel heightModel = new SpinnerNumberModel(1,1,null,1);
@@ -116,6 +117,7 @@ public class MessagePicturatorPanel extends JPanel implements Utility {
 
         //Einstellungen vornehmen
         msgIO.setLineWrap(true);
+        msgIO.setWrapStyleWord(true);
         widthSpinner.setToolTipText("Relative Breite des Bildes im Bezug zu seiner Höhe.");
         heightSpinner.setToolTipText("Relative Höhe des Bildes im Bezug zu seiner Breite.");
         resetWidthButton.setToolTipText("Relative Breite zurücksetzen");
