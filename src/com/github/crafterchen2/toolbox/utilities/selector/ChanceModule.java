@@ -1,6 +1,6 @@
-package com.deckerben.utilities.selector;
+package com.github.crafterchen2.toolbox.utilities.selector;
 
-import com.deckerben.Resettable;
+import com.github.crafterchen2.toolbox.Resettable;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;

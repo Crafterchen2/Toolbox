@@ -1,7 +1,7 @@
-package com.deckerben.utilities.selector;
+package com.github.crafterchen2.toolbox.utilities.selector;
 
-import com.deckerben.component.layout.VerticalListLayout;
-import com.deckerben.utilities.Utility;
+import com.github.crafterchen2.toolbox.component.layout.VerticalListLayout;
+import com.github.crafterchen2.toolbox.Utility;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;

@@ -1,6 +1,6 @@
-package com.deckerben.utilities.randombit;
+package com.github.crafterchen2.toolbox.utilities.randombit;
 
-import com.deckerben.utilities.Utility;
+import com.github.crafterchen2.toolbox.Utility;
 
 import javax.swing.*;
 import java.awt.*;

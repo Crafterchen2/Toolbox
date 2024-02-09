@@ -1,4 +1,4 @@
-package com.deckerben.component.tab;
+package com.github.crafterchen2.toolbox.component.tab;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;

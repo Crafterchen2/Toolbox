@@ -1,13 +1,13 @@
-package com.deckerben.utilities;
+package com.github.crafterchen2.toolbox;
 
-import com.deckerben.Resettable;
-import com.deckerben.component.tab.TabButton;
-import com.deckerben.component.tab.TabLabel;
-import com.deckerben.utilities.clicker.ClickerPanel;
-import com.deckerben.utilities.comtest.ComponentTester;
-import com.deckerben.utilities.msgpics.component.MessagePicturatorPanel;
-import com.deckerben.utilities.randombit.RandomBitPanel;
-import com.deckerben.utilities.selector.ChancePanel;
+import com.github.crafterchen2.toolbox.component.tab.TabButton;
+import com.github.crafterchen2.toolbox.component.tab.TabLabel;
+import com.github.crafterchen2.toolbox.utilities.animshift.AnimationShifter;
+import com.github.crafterchen2.toolbox.utilities.clicker.ClickerPanel;
+import com.github.crafterchen2.toolbox.utilities.comtest.ComponentTester;
+import com.github.crafterchen2.toolbox.utilities.msgpics.component.MessagePicturatorPanel;
+import com.github.crafterchen2.toolbox.utilities.randombit.RandomBitPanel;
+import com.github.crafterchen2.toolbox.utilities.selector.ChancePanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,8 +42,9 @@ public class ToolboxPanel extends JPanel implements Utility {
     //Methoden
     ////Erstellen der Utility-liste
     private ArrayList<Utility> createInitialUtilityList(){
-        ArrayList<Utility> rv = new ArrayList<>(5);
+        ArrayList<Utility> rv = new ArrayList<>(6);
         rv.add(new MessagePicturatorPanel());
+        rv.add(new AnimationShifter());
         rv.add(new ComponentTester());
         rv.add(new ClickerPanel());
         rv.add(new ChancePanel());

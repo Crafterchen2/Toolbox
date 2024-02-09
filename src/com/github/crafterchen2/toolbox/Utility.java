@@ -1,6 +1,6 @@
-package com.deckerben.utilities;
+package com.github.crafterchen2.toolbox;
 
-import com.deckerben.Resettable;
+import com.github.crafterchen2.toolbox.Resettable;
 
 import java.awt.*;
 

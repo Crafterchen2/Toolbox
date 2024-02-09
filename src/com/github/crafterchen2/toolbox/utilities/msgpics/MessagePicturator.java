@@ -1,6 +1,6 @@
-package com.deckerben.utilities.msgpics;
+package com.github.crafterchen2.toolbox.utilities.msgpics;
 
-import com.deckerben.Resettable;
+import com.github.crafterchen2.toolbox.Resettable;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

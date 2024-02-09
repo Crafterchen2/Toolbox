@@ -1,4 +1,4 @@
-package com.deckerben.component.layout;
+package com.github.crafterchen2.toolbox.component.layout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;

@@ -1,4 +1,4 @@
-package com.deckerben.component;
+package com.github.crafterchen2.toolbox.component;
 
 import javax.swing.*;
 import java.awt.*;

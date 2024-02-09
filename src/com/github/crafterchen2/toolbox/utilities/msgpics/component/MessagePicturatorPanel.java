@@ -1,8 +1,8 @@
-package com.deckerben.utilities.msgpics.component;
+package com.github.crafterchen2.toolbox.utilities.msgpics.component;
 
-import com.deckerben.component.SimpleImagePainter;
-import com.deckerben.utilities.Utility;
-import com.deckerben.utilities.msgpics.MessagePicturator;
+import com.github.crafterchen2.toolbox.component.SimpleImagePainter;
+import com.github.crafterchen2.toolbox.Utility;
+import com.github.crafterchen2.toolbox.utilities.msgpics.MessagePicturator;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
