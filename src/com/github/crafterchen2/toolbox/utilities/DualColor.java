@@ -12,6 +12,10 @@ public class DualColor extends Color {
 	
 	//Constructor {
 	//Section 1
+	public DualColor() {
+		this(255,255,255,0,0,0);
+	}
+	
 	public DualColor(Color primary, Color secondary) {
 		this(primary.getRGB(), secondary);
 	}
@@ -135,6 +139,10 @@ public class DualColor extends Color {
 	
 	public static DualColor switchColors(DualColor dualColor){
 		return new DualColor(dualColor.getSecondary(), dualColor.getPrimary());
+	}
+	
+	public DualColor switchColors(){
+		return switchColors(this);
 	}
 	//} Methods
 	
