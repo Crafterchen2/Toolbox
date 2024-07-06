@@ -1,5 +1,6 @@
 package com.github.crafterchen2.toolbox;
 
+import com.github.crafterchen2.toolbox.component.MenuTools;
 import com.github.crafterchen2.toolbox.component.tab.TabButton;
 import com.github.crafterchen2.toolbox.component.tab.TabLabel;
 import com.github.crafterchen2.toolbox.utilities.animshift.AnimationShifter;
@@ -120,34 +121,20 @@ public class ToolboxPanel extends JPanel implements Utility {
         }
         bar.add(addMenu);
         JMenu resetMenu = new JMenu("Zurücksetzen");
-        JMenuItem resetToolbox = new JMenuItem("Toolbox zurücksetzen");
-        resetToolbox.setToolTipText("Setzt die gesamte Toolbox auf den Ursprungszustand zurück.");
-        resetToolbox.addActionListener(e -> reset());
-        resetMenu.add(resetToolbox);
+        resetMenu.add(MenuTools.item("Toolbox zurücksetzen", "Setzt die gesamte Toolbox auf den Ursprungszustand zurück.", _ -> reset()));
         resetMenu.addSeparator();
-        JMenuItem resetAll = new JMenuItem("Alles zurücksetzen");
-        resetAll.setToolTipText("Setzt jeden Tab und jedes externe Fenster zurück, ohne sie zu schließen.");
-        resetAll.addActionListener(e -> resetAll());
-        resetMenu.add(resetAll);
+        resetMenu.add(MenuTools.item("Alles zurücksetzen", "Setzt jeden Tab und jedes externe Fenster zurück, ohne sie zu schließen.", _ -> resetAll()));
         resetMenu.addSeparator();
-        JMenuItem resetTabs = new JMenuItem("Tabs zurücksetzen");
-        resetTabs.addActionListener(e -> resetTabs());
-        resetMenu.add(resetTabs);
-        JMenuItem resetWindows = new JMenuItem("Externe Fenster zurücksetzen");
-        resetWindows.addActionListener(e -> resetFramedUtils());
-        resetMenu.add(resetWindows);
+        resetMenu.add(MenuTools.item("Tabs zurücksetzen", _ -> resetTabs()));
+        resetMenu.add(MenuTools.item("Externe Fenster zurücksetzen", _ -> resetFramedUtils()));
         bar.add(resetMenu);
         JMenu removeMenu = new JMenu("Entfernen");
-        JMenuItem removeAll = new JMenuItem("Alles entfernen");
-        removeAll.addActionListener(e -> reset());
-        removeMenu.add(removeAll);
+        removeMenu.add(MenuTools.item("Toolbox entfernen", _ -> System.exit(0)));
         removeMenu.addSeparator();
-        JMenuItem removeTabs = new JMenuItem("Tabs entfernen");
-        removeTabs.addActionListener(e -> tabs.removeAll());
-        removeMenu.add(removeTabs);
-        JMenuItem removeWindows = new JMenuItem("Externe Fenster Entfernen");
-        removeWindows.addActionListener(e -> removeFramedUtils());
-        removeMenu.add(removeWindows);
+        removeMenu.add(MenuTools.item("Alles entfernen", _ -> reset()));
+        removeMenu.addSeparator();
+        removeMenu.add(MenuTools.item("Tabs entfernen", _ -> tabs.removeAll()));
+        removeMenu.add(MenuTools.item("Externe Fenster entfernen", _ -> removeFramedUtils()));
         bar.add(removeMenu);
         return bar;
     }
@@ -253,6 +240,12 @@ public class ToolboxPanel extends JPanel implements Utility {
                         };
                         frame.setSize(tabs.getSize());
                         frame.setLocationByPlatform(true);
+                        JMenuBar bar = new JMenuBar();
+                        JMenu toolMenu = new JMenu("Tool");
+                        toolMenu.add(MenuTools.item("Zurücksetzen", _ -> ((Utility) frame.getContentPane()).reset()));
+                        toolMenu.add(MenuTools.item("Entfernen", _ -> frame.dispose()));
+                        bar.add(toolMenu);
+                        frame.setJMenuBar(bar);
                         frame.setContentPane((Container) tabs.getComponent(tabIndex));
                         frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                         frame.setVisible(true);
