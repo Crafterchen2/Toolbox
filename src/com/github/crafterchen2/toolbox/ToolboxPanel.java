@@ -50,12 +50,10 @@ public class ToolboxPanel extends JPanel implements Utility {
 		rv.add(new MessagePicturatorPanel());
 		rv.add(new EqSysTrainer());
 		rv.add(new AnimationShifter());
-		rv.add(new RatioCalculator());
 		rv.add(new ComponentTester());
 		rv.add(new ClickerPanel());
 		rv.add(new ChancePanel());
 		rv.add(new RandomBitPanel());
-		rv.add(new LogoGenerator());
 		return rv;
 	}
 	
