@@ -89,6 +89,16 @@ public class ToolboxPanel extends JPanel implements Utility {
 		return null;
 	}
 	
+	private void addUtilToTabs(Component util, final int id, String name){
+		tabs.addTab(name, util);
+		TabLabel tabLabel = new TabLabel(name, tabs);
+		TabButton[] tabButtons = new TabButton[2];
+		tabButtons[0] = new ResetTabButton(id);
+		tabButtons[1] = new EjectTabButton(id);
+		tabs.setTabComponentAt(tabs.getTabCount() - 1, tabLabel.generateRecommendedPanel(true, tabButtons));
+		tabs.updateUI();
+	}
+	
 	private JMenuBar makeUtilityBar() {
 		JMenuBar bar = new JMenuBar();
 		JMenu addMenu = new JMenu("Hinzufügen");
@@ -99,13 +109,7 @@ public class ToolboxPanel extends JPanel implements Utility {
 			items[i].addActionListener(e -> {
 				synchronized (tabs.getTreeLock()) {
 					UtilityMenuItem item = (UtilityMenuItem) e.getSource();
-					tabs.addTab(item.getText(), getUtility(item.getUtilityID()).createNewInstance());
-					TabLabel tabLabel = new TabLabel(getUtility(item.getUtilityID()).getUtilitiyName(), tabs);
-					TabButton[] tabButtons = new TabButton[2];
-					tabButtons[0] = new ResetTabButton(item.getUtilityID());
-					tabButtons[1] = new EjectTabButton();
-					tabs.setTabComponentAt(tabs.getTabCount() - 1, tabLabel.generateRecommendedPanel(true, tabButtons));
-					tabs.updateUI();
+					addUtilToTabs(getUtility(item.getUtilityID()).createNewInstance(), item.getUtilityID(), item.getText());
 				}
 			});
 		}
@@ -214,7 +218,7 @@ public class ToolboxPanel extends JPanel implements Utility {
 	private class EjectTabButton extends TabButton {
 		
 		//Constructor {
-		public EjectTabButton() {
+		public EjectTabButton(final int utilityID) {
 			super("⏏");
 			setToolTipText("In seperatem Fenster öffnen");
 			addActionListener(_ -> {
@@ -236,6 +240,10 @@ public class ToolboxPanel extends JPanel implements Utility {
 						JMenu toolMenu = new JMenu("Tool");
 						toolMenu.add(MenuTools.item("Zurücksetzen", _ -> ((Utility) frame.getContentPane()).reset()));
 						toolMenu.add(MenuTools.item("Entfernen", _ -> frame.dispose()));
+						toolMenu.add(MenuTools.item("Zu Tab", "Schließt das Fenster und reiht sich wieder zu den Tabs ein.", _ -> {
+							addUtilToTabs(frame.getContentPane(), utilityID, frame.getTitle());
+							frame.dispose();
+						}));
 						bar.add(toolMenu);
 						frame.setJMenuBar(bar);
 						frame.setContentPane((Container) tabs.getComponent(tabIndex));
