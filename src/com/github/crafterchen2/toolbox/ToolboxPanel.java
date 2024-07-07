@@ -3,7 +3,6 @@ package com.github.crafterchen2.toolbox;
 import com.github.crafterchen2.toolbox.component.MenuTools;
 import com.github.crafterchen2.toolbox.component.tab.TabButton;
 import com.github.crafterchen2.toolbox.component.tab.TabLabel;
-import com.github.crafterchen2.toolbox.utilities.animshift.AnimationShifter;
 import com.github.crafterchen2.toolbox.utilities.clicker.ClickerPanel;
 import com.github.crafterchen2.toolbox.utilities.comtest.ComponentTester;
 import com.github.crafterchen2.toolbox.utilities.eqsystrainer.EqSysTrainer;
@@ -49,7 +48,6 @@ public class ToolboxPanel extends JPanel implements Utility {
 		ArrayList<Utility> rv = new ArrayList<>(6);
 		rv.add(new MessagePicturatorPanel());
 		rv.add(new EqSysTrainer());
-		rv.add(new AnimationShifter());
 		rv.add(new ComponentTester());
 		rv.add(new ClickerPanel());
 		rv.add(new ChancePanel());
