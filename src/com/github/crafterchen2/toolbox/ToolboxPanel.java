@@ -10,10 +10,15 @@ import com.github.crafterchen2.toolbox.utilities.msgpics.component.MessagePictur
 import com.github.crafterchen2.toolbox.utilities.randombit.RandomBitPanel;
 import com.github.crafterchen2.toolbox.utilities.rnglist.RngList;
 import com.github.crafterchen2.toolbox.utilities.selector.ChancePanel;
+import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
+import org.reflections.util.ConfigurationBuilder;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Set;
 
 //Classes {
 public class ToolboxPanel extends JPanel implements Utility {
@@ -46,14 +51,25 @@ public class ToolboxPanel extends JPanel implements Utility {
 	}
 	
 	private ArrayList<Utility> createInitialUtilityList() {
-		ArrayList<Utility> rv = new ArrayList<>(6);
-		rv.add(new MessagePicturatorPanel());
-		rv.add(new EqSysTrainer());
-		rv.add(new RngList());
-		rv.add(new ClickerPanel());
-		rv.add(new ChancePanel());
-		rv.add(new RandomBitPanel());
-		rv.add(new ComponentTester());
+		ArrayList<Utility> rv = new ArrayList<>();
+		Reflections reflections = new Reflections(new ConfigurationBuilder()
+														  .forPackages("")  // Empty string means scan the entire classpath
+														  .addScanners(Scanners.TypesAnnotated));
+		Set<Class<?>> annotatedClasses = reflections.getTypesAnnotatedWith(Tool.class);
+		for (Class<?> clazz : annotatedClasses) {
+			if (Utility.class.isAssignableFrom(clazz)) {
+				try {
+					Utility util = (Utility) clazz.getDeclaredConstructor().newInstance();
+					if (util.getUtilitiyName() != null && !util.getUtilitiyName().isEmpty()) {
+						if (util.getComponent() != null && util.createNewInstance() != null) {
+							rv.add(util);
+						}
+					}
+				} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 		return rv;
 	}
 	

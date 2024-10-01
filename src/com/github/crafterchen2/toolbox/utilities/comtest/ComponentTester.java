@@ -1,5 +1,6 @@
 package com.github.crafterchen2.toolbox.utilities.comtest;
 
+import com.github.crafterchen2.toolbox.Tool;
 import com.github.crafterchen2.toolbox.component.FileNameFilter;
 import com.github.crafterchen2.toolbox.component.FilePickerField;
 import com.github.crafterchen2.toolbox.component.layout.VerticalListLayout;
@@ -11,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.function.BiConsumer;
 
+@Tool
 public class ComponentTester extends JPanel implements Utility {
 
     //Felder

@@ -1,5 +1,6 @@
 package com.github.crafterchen2.toolbox.utilities.randombit;
 
+import com.github.crafterchen2.toolbox.Tool;
 import com.github.crafterchen2.toolbox.Utility;
 
 import javax.swing.*;
@@ -7,6 +8,7 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 
+@Tool
 public class RandomBitPanel extends JPanel implements Utility {
 
     //Felder

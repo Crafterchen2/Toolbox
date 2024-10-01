@@ -1,5 +1,6 @@
 package com.github.crafterchen2.toolbox.utilities.selector;
 
+import com.github.crafterchen2.toolbox.Tool;
 import com.github.crafterchen2.toolbox.component.layout.VerticalListLayout;
 import com.github.crafterchen2.toolbox.Utility;
 
@@ -8,6 +9,7 @@ import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.util.Objects;
 
+@Tool
 public class ChancePanel extends JPanel implements Utility {
 
     //Felder

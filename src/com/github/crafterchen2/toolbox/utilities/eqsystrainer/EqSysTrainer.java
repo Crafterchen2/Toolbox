@@ -1,6 +1,7 @@
 package com.github.crafterchen2.toolbox.utilities.eqsystrainer;
 
 import com.github.crafterchen2.toolbox.Resettable;
+import com.github.crafterchen2.toolbox.Tool;
 import com.github.crafterchen2.toolbox.Utility;
 import com.github.crafterchen2.toolbox.component.layout.MonoLayout;
 
@@ -11,6 +12,7 @@ import java.awt.*;
 import java.util.Objects;
 
 //Classes {
+@Tool
 public class EqSysTrainer extends JPanel implements Utility {
 	
 	//Fields {

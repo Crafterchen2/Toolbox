@@ -1,5 +1,6 @@
 package com.github.crafterchen2.toolbox.utilities.logogen;
 
+import com.github.crafterchen2.toolbox.Tool;
 import com.github.crafterchen2.toolbox.component.SimpleImagePainter;
 import com.github.crafterchen2.toolbox.utilities.DualColor;
 import com.github.crafterchen2.toolbox.Utility;

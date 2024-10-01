@@ -9,5 +9,17 @@ public interface Resettable {
     }
 
     void resetCode();
+    
+    /*
+    ResetCode problem lösung von Paul
+    
+    default void reset() throws IllegalStateException{
+        if (!canReset()) throw new IllegalStateException();
+    }
+    
+    default void safeReset() {
+        // try reset bla
+    }
+     */
 
 }
