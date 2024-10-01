@@ -8,6 +8,7 @@ import com.github.crafterchen2.toolbox.utilities.comtest.ComponentTester;
 import com.github.crafterchen2.toolbox.utilities.eqsystrainer.EqSysTrainer;
 import com.github.crafterchen2.toolbox.utilities.msgpics.component.MessagePicturatorPanel;
 import com.github.crafterchen2.toolbox.utilities.randombit.RandomBitPanel;
+import com.github.crafterchen2.toolbox.utilities.rnglist.RngList;
 import com.github.crafterchen2.toolbox.utilities.selector.ChancePanel;
 
 import javax.swing.*;
@@ -48,10 +49,11 @@ public class ToolboxPanel extends JPanel implements Utility {
 		ArrayList<Utility> rv = new ArrayList<>(6);
 		rv.add(new MessagePicturatorPanel());
 		rv.add(new EqSysTrainer());
-		rv.add(new ComponentTester());
+		rv.add(new RngList());
 		rv.add(new ClickerPanel());
 		rv.add(new ChancePanel());
 		rv.add(new RandomBitPanel());
+		rv.add(new ComponentTester());
 		return rv;
 	}
 	
