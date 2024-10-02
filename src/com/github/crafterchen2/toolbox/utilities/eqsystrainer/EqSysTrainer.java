@@ -54,16 +54,16 @@ public class EqSysTrainer extends JPanel implements Utility {
 		JButton calcButton = new JButton("Neue Aufgabe");
 		calcButton.setToolTipText("Stellt eine neue Aufgabe.");
 		calcButton.setMargin(zero);
-		calcButton.addActionListener(e -> calculate());
+		calcButton.addActionListener(_ -> calculate());
 		top.add(calcButton);
 		JButton revealButton = new JButton("Auflösen");
 		revealButton.setToolTipText("Präsentiert die Lösung der Aufgabe.");
 		revealButton.setMargin(zero);
-		revealButton.addActionListener(e -> reveal());
+		revealButton.addActionListener(_ -> reveal());
 		top.add(revealButton);
 		checkButton.setToolTipText("Überprüft die Eingabe, ob sie korrekt ist.");
 		checkButton.setMargin(zero);
-		checkButton.addActionListener(e -> {
+		checkButton.addActionListener(_ -> {
 			if (!showSolution) check();
 		});
 		top.add(checkButton);
@@ -76,7 +76,7 @@ public class EqSysTrainer extends JPanel implements Utility {
 		table.setAutoCreateColumnsFromModel(true);
 		bottom.add(new JScrollPane(table));
 		add(bottom, BorderLayout.CENTER);
-		tableModel.addTableModelListener(e -> {
+		tableModel.addTableModelListener(_ -> {
 			table.createDefaultColumnsFromModel();
 			updateRenderer(table);
 		});
@@ -108,13 +108,16 @@ public class EqSysTrainer extends JPanel implements Utility {
 				b[i] += (long) a[j][i] * x[j];
 			}
 		}
-		showSolution = false;
 		tableModel.reset();
-		tableModel.fireTableDataChanged();
+		reveal(false);
 	}
 	
 	private void reveal() {
-		showSolution = !showSolution;
+		reveal(!showSolution);
+	}
+	
+	private void reveal(boolean show) {
+		showSolution = show;
 		checkButton.setEnabled(!showSolution);
 		tableModel.fireTableDataChanged();
 	}
