@@ -3,21 +3,18 @@ package com.github.crafterchen2.toolbox.utilities.comtest;
 import com.github.crafterchen2.toolbox.Tool;
 import com.github.crafterchen2.toolbox.component.FileNameFilter;
 import com.github.crafterchen2.toolbox.component.FilePickerField;
-import com.github.crafterchen2.toolbox.component.layout.VerticalListLayout;
 import com.github.crafterchen2.toolbox.Utility;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.function.BiConsumer;
 
 @Tool
 public class ComponentTester extends JPanel implements Utility {
 
     //Felder
-    FilePickerField fpf = new FilePickerField(false);
-    FilePickerField fpt = new FilePickerField(true, new FileNameFilter("Resource Pack (pack.mcmeta)","pack.mcmeta"));
+    private final FilePickerField fpf = new FilePickerField(false);
+    private final FilePickerField fpt = new FilePickerField(true, new FileNameFilter("Resource Pack (pack.mcmeta)","pack.mcmeta"));
 
     //Konstruktoren
     public ComponentTester(){

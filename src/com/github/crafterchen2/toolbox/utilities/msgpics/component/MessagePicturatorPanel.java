@@ -234,7 +234,7 @@ public class MessagePicturatorPanel extends JPanel implements Utility {
             try {
                 ImageIO.write(getMsgToPicture(), format, selectedFile);
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new IllegalStateException("Failed to write to file, although this should be impossible.");
             }
         });
     }
@@ -270,8 +270,7 @@ public class MessagePicturatorPanel extends JPanel implements Utility {
                     saveActions.accept(selectedFile,format); //HAHA! BiConsumer! Wie Geil ist das denn?
                 }
             } catch(Exception e) {
-                JOptionPane.showMessageDialog(this,"Fehler beim Überschreiben der Datei.");
-                e.printStackTrace();
+                JOptionPane.showMessageDialog(this,"Fehler beim Speichern der Datei.");
             }
         }
     }
@@ -332,8 +331,9 @@ public class MessagePicturatorPanel extends JPanel implements Utility {
     private record TransferableImage(Image i) implements Transferable {
 
         //Getter
-         public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
-            if (flavor.equals(DataFlavor.imageFlavor) && i != null) {
+         @Override
+		 public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
+            if (flavor != null && flavor.equals(DataFlavor.imageFlavor) && i != null) {
                 return i;
             } else {
                 throw new UnsupportedFlavorException(flavor);
