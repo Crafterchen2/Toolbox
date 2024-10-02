@@ -61,11 +61,5 @@ public class ToolboxFrame extends JFrame {
 		setVisible(true);
 	}
 	//} Constructor
-	
-	//Methods {
-	public static void main(String[] args) {
-		new ToolboxFrame(args);
-	}
-	//} Methods
 }
 //} Classes
