@@ -46,9 +46,8 @@ public class ToolboxPanel extends JPanel implements Utility {
 	
 	private ArrayList<Utility> createInitialUtilityList() {
 		ArrayList<Utility> rv = new ArrayList<>();
-		Reflections reflections = new Reflections(new ConfigurationBuilder()
-														  .forPackages("")  // Empty string means scan the entire classpath
-														  .addScanners(Scanners.TypesAnnotated));
+		Reflections reflections = new Reflections(new ConfigurationBuilder().forPackages("")  // Empty string means scan the entire classpath
+																			.addScanners(Scanners.TypesAnnotated));
 		Set<Class<?>> annotatedClasses = reflections.getTypesAnnotatedWith(Tool.class);
 		for (Class<?> clazz : annotatedClasses) {
 			if (Utility.class.isAssignableFrom(clazz)) {
@@ -58,13 +57,13 @@ public class ToolboxPanel extends JPanel implements Utility {
 						if (util.getComponent() != null && util.createNewInstance() != null) {
 							rv.add(util);
 						} else {
-							rv.add(new ErrorUtil(util.getClass().getName(), "No Component provided."));
+							rv.add(new ErrorUtil(util.getClass().getName(), "Kein Component angegeben."));
 						}
 					} else {
-						rv.add(new ErrorUtil(util.getClass().getName(), "No name provided."));
+						rv.add(new ErrorUtil(util.getClass().getName(), "Kein Name angegeben."));
 					}
 				} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-					rv.add(new ErrorUtil(clazz.getName(), "Could not create object."));
+					rv.add(new ErrorUtil(clazz.getName(), "Objekt konnte nicht erstellt werden."));
 				}
 			}
 		}
@@ -110,7 +109,7 @@ public class ToolboxPanel extends JPanel implements Utility {
 		return null;
 	}
 	
-	private void addUtilToTabs(Component util, final int id, String name){
+	private void addUtilToTabs(Component util, final int id, String name) {
 		tabs.addTab(name, util);
 		TabLabel tabLabel = new TabLabel(name, tabs);
 		TabButton[] tabButtons = new TabButton[2];
@@ -183,7 +182,7 @@ public class ToolboxPanel extends JPanel implements Utility {
 	
 	@Override
 	public String getUtilitiyName() {
-		return "Utilities";
+		return "Toolbox";
 	}
 	
 	@Override
@@ -200,9 +199,12 @@ public class ToolboxPanel extends JPanel implements Utility {
 	//Classes {
 	private static class ErrorUtil implements Utility {
 		
+		//Fields {
 		private final String name;
 		private final String reason;
+		//} Fields
 		
+		//Constructor {
 		public ErrorUtil() {
 			this(null, null);
 		}
@@ -212,12 +214,14 @@ public class ToolboxPanel extends JPanel implements Utility {
 		}
 		
 		public ErrorUtil(String name, String reason) {
-			if (name == null) name = "unknown";
-			if (reason == null) reason = "No reason provided.";
+			if (name == null) name = "Unbekannt";
+			if (reason == null) reason = "Kein Grund bekannt.";
 			this.name = name;
 			this.reason = reason;
 		}
+		//} Constructor
 		
+		//Overrides {
 		@Override
 		public String getUtilitiyName() {
 			return name;
@@ -225,8 +229,8 @@ public class ToolboxPanel extends JPanel implements Utility {
 		
 		@Override
 		public Component getComponent() {
-			JPanel c = new JPanel(new MonoLayout(10,10));
-			c.add(new JLabel(getUtilitiyName() + " failed to load. Reason: " + reason));
+			JPanel c = new JPanel(new MonoLayout(10, 10));
+			c.add(new JLabel(getUtilitiyName() + " konnte nicht geladen werden. Grund: " + reason));
 			return c;
 		}
 		
@@ -249,6 +253,7 @@ public class ToolboxPanel extends JPanel implements Utility {
 		public int getListPriority() {
 			return Integer.MIN_VALUE;
 		}
+		//} Overrides
 	}
 	
 	private class UtilityMenuItem extends JMenuItem {
