@@ -1,5 +1,6 @@
 package com.github.crafterchen2.toolbox.utilities.msgpics.component;
 
+import com.github.crafterchen2.toolbox.Tool;
 import com.github.crafterchen2.toolbox.component.SimpleImagePainter;
 import com.github.crafterchen2.toolbox.Utility;
 import com.github.crafterchen2.toolbox.utilities.msgpics.MessagePicturator;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+@Tool
 public class MessagePicturatorPanel extends JPanel implements Utility {
 
     //Felder
@@ -318,7 +320,12 @@ public class MessagePicturatorPanel extends JPanel implements Utility {
     public Component createNewInstance() {
         return new MessagePicturatorPanel();
     }
-
+    
+    @Override
+    public int getListPriority() {
+        return 8;
+    }
+    
     //Interne Klassen
     ////TransferableImage
     ////Speicherform eines Bilds in der Zwischenablage

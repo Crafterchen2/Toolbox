@@ -1,11 +1,13 @@
 package com.github.crafterchen2.toolbox.utilities.rnglist;
 
+import com.github.crafterchen2.toolbox.Tool;
 import com.github.crafterchen2.toolbox.Utility;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
 
+@Tool
 public class RngList extends JComponent implements Utility {
 	
 	private final SpinnerNumberModel lengthModel = new SpinnerNumberModel(0,0, Byte.MAX_VALUE, 1);
@@ -63,6 +65,11 @@ public class RngList extends JComponent implements Utility {
 	@Override
 	public Component createNewInstance() {
 		return new RngList();
+	}
+	
+	@Override
+	public int getListPriority() {
+		return 9;
 	}
 	
 	@Override

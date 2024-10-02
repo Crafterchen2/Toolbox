@@ -11,5 +11,9 @@ public interface Utility extends Resettable {
     Component getComponent();
 
     Component createNewInstance();
+    
+    default int getListPriority() {
+        return 0;
+    }
 
 }

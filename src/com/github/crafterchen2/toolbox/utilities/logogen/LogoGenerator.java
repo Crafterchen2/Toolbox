@@ -1,5 +1,6 @@
 package com.github.crafterchen2.toolbox.utilities.logogen;
 
+import com.github.crafterchen2.toolbox.Tool;
 import com.github.crafterchen2.toolbox.component.SimpleImagePainter;
 import com.github.crafterchen2.toolbox.utilities.DualColor;
 import com.github.crafterchen2.toolbox.Utility;
@@ -8,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 
 //Classes {
+@Tool
 public class LogoGenerator extends JPanel implements Utility {
 	
 	//private final SimpleImagePainter zoomedDisplay;
@@ -44,6 +46,11 @@ public class LogoGenerator extends JPanel implements Utility {
 	@Override
 	public Component createNewInstance() {
 		return null;
+	}
+	
+	@Override
+	public int getListPriority() {
+		return 4;
 	}
 	//} Overrides
 }

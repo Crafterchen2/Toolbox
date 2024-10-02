@@ -1,6 +1,7 @@
 package com.github.crafterchen2.toolbox.utilities.clicker;
 
 
+import com.github.crafterchen2.toolbox.Tool;
 import com.github.crafterchen2.toolbox.Utility;
 
 import javax.swing.*;
@@ -8,6 +9,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+@Tool
 public class ClickerPanel extends JPanel implements Utility {
   
   //Felder

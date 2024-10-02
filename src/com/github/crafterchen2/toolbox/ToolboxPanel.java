@@ -1,19 +1,18 @@
 package com.github.crafterchen2.toolbox;
 
 import com.github.crafterchen2.toolbox.component.MenuTools;
+import com.github.crafterchen2.toolbox.component.layout.MonoLayout;
 import com.github.crafterchen2.toolbox.component.tab.TabButton;
 import com.github.crafterchen2.toolbox.component.tab.TabLabel;
-import com.github.crafterchen2.toolbox.utilities.clicker.ClickerPanel;
-import com.github.crafterchen2.toolbox.utilities.comtest.ComponentTester;
-import com.github.crafterchen2.toolbox.utilities.eqsystrainer.EqSysTrainer;
-import com.github.crafterchen2.toolbox.utilities.msgpics.component.MessagePicturatorPanel;
-import com.github.crafterchen2.toolbox.utilities.randombit.RandomBitPanel;
-import com.github.crafterchen2.toolbox.utilities.rnglist.RngList;
-import com.github.crafterchen2.toolbox.utilities.selector.ChancePanel;
+import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
+import org.reflections.util.ConfigurationBuilder;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Set;
 
 //Classes {
 public class ToolboxPanel extends JPanel implements Utility {
@@ -46,14 +45,34 @@ public class ToolboxPanel extends JPanel implements Utility {
 	}
 	
 	private ArrayList<Utility> createInitialUtilityList() {
-		ArrayList<Utility> rv = new ArrayList<>(6);
-		rv.add(new MessagePicturatorPanel());
-		rv.add(new EqSysTrainer());
-		rv.add(new RngList());
-		rv.add(new ClickerPanel());
-		rv.add(new ChancePanel());
-		rv.add(new RandomBitPanel());
-		rv.add(new ComponentTester());
+		ArrayList<Utility> rv = new ArrayList<>();
+		Reflections reflections = new Reflections(new ConfigurationBuilder()
+														  .forPackages("")  // Empty string means scan the entire classpath
+														  .addScanners(Scanners.TypesAnnotated));
+		Set<Class<?>> annotatedClasses = reflections.getTypesAnnotatedWith(Tool.class);
+		for (Class<?> clazz : annotatedClasses) {
+			if (Utility.class.isAssignableFrom(clazz)) {
+				try {
+					Utility util = (Utility) clazz.getDeclaredConstructor().newInstance();
+					if (util.getUtilitiyName() != null && !util.getUtilitiyName().isEmpty()) {
+						if (util.getComponent() != null && util.createNewInstance() != null) {
+							rv.add(util);
+						} else {
+							rv.add(new ErrorUtil(util.getClass().getName(), "No Component provided."));
+						}
+					} else {
+						rv.add(new ErrorUtil(util.getClass().getName(), "No name provided."));
+					}
+				} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		rv.sort((u1, u2) -> {
+			int prioSort = -Integer.compare(u1.getListPriority(), u2.getListPriority());
+			if (prioSort == 0) return String.CASE_INSENSITIVE_ORDER.compare(u1.getUtilitiyName(), u2.getUtilitiyName());
+			return prioSort;
+		});
 		return rv;
 	}
 	
@@ -179,6 +198,59 @@ public class ToolboxPanel extends JPanel implements Utility {
 	//} Overrides
 	
 	//Classes {
+	private static class ErrorUtil implements Utility {
+		
+		private final String name;
+		private final String reason;
+		
+		public ErrorUtil() {
+			this(null, null);
+		}
+		
+		public ErrorUtil(String name) {
+			this(name, null);
+		}
+		
+		public ErrorUtil(String name, String reason) {
+			if (name == null) name = "unknown";
+			if (reason == null) reason = "No reason provided.";
+			this.name = name;
+			this.reason = reason;
+		}
+		
+		@Override
+		public String getUtilitiyName() {
+			return name;
+		}
+		
+		@Override
+		public Component getComponent() {
+			JPanel c = new JPanel(new MonoLayout(10,10));
+			c.add(new JLabel(getUtilitiyName() + " failed to load. Reason: " + reason));
+			return c;
+		}
+		
+		@Override
+		public Component createNewInstance() {
+			return getComponent();
+		}
+		
+		@Override
+		public boolean canReset() {
+			return false;
+		}
+		
+		@Override
+		public void resetCode() {
+		
+		}
+		
+		@Override
+		public int getListPriority() {
+			return Integer.MIN_VALUE;
+		}
+	}
+	
 	private class UtilityMenuItem extends JMenuItem {
 		
 		//Fields {
