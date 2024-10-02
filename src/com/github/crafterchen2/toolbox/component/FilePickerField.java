@@ -7,7 +7,6 @@ import java.awt.*;
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
 import java.util.*;
-import java.util.List;
 
 public class FilePickerField extends JComponent implements Resettable {
 
@@ -58,8 +57,6 @@ public class FilePickerField extends JComponent implements Resettable {
         });
         field.setFont(field.getFont().deriveFont(Font.BOLD));
         field.addActionListener(e -> setSelected(new File(field.getText())));
-        //chooser.setAcceptAllFileFilterUsed(false);
-        //chooser.addChoosableFileFilter(new FileNameFilter("Resource pack (pack.mcmeta)", "pack.mcmeta"));
         setLayout(new BorderLayout());
         JButton picker = new JButton("Pick File");
         picker.addActionListener(e -> {

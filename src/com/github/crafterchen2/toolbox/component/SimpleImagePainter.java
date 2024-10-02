@@ -44,8 +44,8 @@ public class SimpleImagePainter extends JComponent {
     /**
      * Modus 3 & 4: Zeigt das Bild in der so groß wie möglich an, basierend auf der Größe des Components.
      * @param img Das Bild.
-     * @param distorting true: Keine Verzerrung des Bildes (-> Modus 3).
-     *                   false: Erlaubt eine Verzerrung des Bildes (-> Modus 4).
+     * @param distorting true: Keine Verzerrung des Bildes (→ Modus 3).
+     *                   false: Erlaubt eine Verzerrung des Bildes (→ Modus 4).
      */
     public SimpleImagePainter(BufferedImage img, boolean distorting) {
         setImage(img, distorting);
@@ -97,8 +97,8 @@ public class SimpleImagePainter extends JComponent {
 
     /**
      * Modus 3 & 4: Ändert nur Darstellungsmodus. Zeigt das Bild in der so groß wie möglich an, basierend auf der Größe des Components.
-     * @param distorting true: Keine Verzerrung des Bildes (-> Modus 3).
-     *                   false: Erlaubt eine Verzerrung des Bildes (-> Modus 4).
+     * @param distorting true: Keine Verzerrung des Bildes (→ Modus 3).
+     *                   false: Erlaubt eine Verzerrung des Bildes (→ Modus 4).
      */
     public void updateImgLayout(boolean distorting) {
         //Falls das Component noch nicht gemalt werden konnte, Originalgröße verwenden.
@@ -157,8 +157,8 @@ public class SimpleImagePainter extends JComponent {
     /**
      * Modus 3 & 4: Zeigt das neue Bild in der so groß wie möglich an, basierend auf der Größe des Components.
      * @param img Das neue Bild.
-     * @param distorting true: Keine Verzerrung des Bildes (-> Modus 3).
-     *                   false: Erlaubt eine Verzerrung des Bildes (-> Modus 4).
+     * @param distorting true: Keine Verzerrung des Bildes (→ Modus 3).
+     *                   false: Erlaubt eine Verzerrung des Bildes (→ Modus 4).
      */
     public void setImage(BufferedImage img, boolean distorting) {
         this.img = img;

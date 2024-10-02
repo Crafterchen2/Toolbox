@@ -64,7 +64,7 @@ public class ToolboxPanel extends JPanel implements Utility {
 						rv.add(new ErrorUtil(util.getClass().getName(), "No name provided."));
 					}
 				} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-					e.printStackTrace();
+					rv.add(new ErrorUtil(clazz.getName(), "Could not create object."));
 				}
 			}
 		}
