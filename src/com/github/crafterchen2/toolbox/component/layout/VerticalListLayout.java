@@ -52,8 +52,7 @@ public class VerticalListLayout implements LayoutManager{
     private Dimension findMaxPreferredSize(Component[] coms){
         Dimension rv = new Dimension(0,0);
         for (Component com : coms) {
-            rv.height = Math.max(rv.height, com.getPreferredSize().height);
-            rv.width = Math.max(rv.width, com.getPreferredSize().width);
+            findMaxSize(rv,com.getPreferredSize());
         }
         return rv;
     }
@@ -61,10 +60,14 @@ public class VerticalListLayout implements LayoutManager{
     private Dimension findMaxMinimumSize(Component[] coms){
         Dimension rv = new Dimension(0,0);
         for (Component com : coms) {
-            rv.height = Math.max(rv.height, com.getMinimumSize().height);
-            rv.width = Math.max(rv.width, com.getMinimumSize().width);
+            findMaxSize(rv,com.getMinimumSize());
         }
         return rv;
+    }
+    
+    private void findMaxSize(Dimension rv, Dimension other) {
+        rv.height = Math.max(rv.height, other.height);
+        rv.width = Math.max(rv.width, other.width);
     }
 
     //Getter
@@ -119,19 +122,21 @@ public class VerticalListLayout implements LayoutManager{
 
     public Dimension preferredLayoutSize(Container parent) {
         synchronized (parent.getTreeLock()) {
-            Insets insets = parent.getInsets();
-            int ncomponents = parent.getComponentCount();
-            Dimension rv = findMaxPreferredSize(parent);
-            return new Dimension((insets.left+insets.right)+(rv.width+vgap)*ncomponents,(insets.top+insets.bottom)+(rv.height+vgap)*ncomponents);
+            return layoutSize(parent, findMaxPreferredSize(parent));
         }
     }
 
     public Dimension minimumLayoutSize(Container parent) {
         synchronized (parent.getTreeLock()) {
+            return layoutSize(parent, findMaxMinimumSize(parent));
+        }
+    }
+    
+    private Dimension layoutSize(Container parent, Dimension size) {
+        synchronized (parent.getTreeLock()) {
             Insets insets = parent.getInsets();
             int ncomponents = parent.getComponentCount();
-            Dimension rv = findMaxMinimumSize(parent);
-            return new Dimension((insets.left+insets.right)+(rv.width+vgap)*ncomponents,(insets.top+insets.bottom)+(rv.height+vgap)*ncomponents);
+            return new Dimension((insets.left+insets.right)+(size.width+vgap)*ncomponents,(insets.top+insets.bottom)+(size.height+vgap)*ncomponents);
         }
     }
 
