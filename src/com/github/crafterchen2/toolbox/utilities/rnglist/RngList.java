@@ -68,6 +68,11 @@ public class RngList extends JComponent implements Utility {
 	}
 	
 	@Override
+	public int getListPriority() {
+		return 9;
+	}
+	
+	@Override
 	public boolean canReset() {
 		return true;
 	}

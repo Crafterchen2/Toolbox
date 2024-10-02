@@ -65,4 +65,9 @@ public class ComponentTester extends JPanel implements Utility {
     public Component createNewInstance() {
         return new ComponentTester();
     }
+    
+    @Override
+    public int getListPriority() {
+        return -1;
+    }
 }

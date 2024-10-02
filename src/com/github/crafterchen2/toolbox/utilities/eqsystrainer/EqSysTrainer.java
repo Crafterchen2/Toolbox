@@ -166,6 +166,11 @@ public class EqSysTrainer extends JPanel implements Utility {
 		checkButton.setEnabled(true);
 		calculate();
 	}
+	
+	@Override
+	public int getListPriority() {
+		return 10;
+	}
 	//} Overrides
 	
 	//Classes {

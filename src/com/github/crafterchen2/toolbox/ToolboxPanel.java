@@ -68,6 +68,11 @@ public class ToolboxPanel extends JPanel implements Utility {
 				}
 			}
 		}
+		rv.sort((u1, u2) -> {
+			int prioSort = -Integer.compare(u1.getListPriority(), u2.getListPriority());
+			if (prioSort == 0) return String.CASE_INSENSITIVE_ORDER.compare(u1.getUtilitiyName(), u2.getUtilitiyName());
+			return prioSort;
+		});
 		return rv;
 	}
 	
@@ -240,6 +245,10 @@ public class ToolboxPanel extends JPanel implements Utility {
 		
 		}
 		
+		@Override
+		public int getListPriority() {
+			return Integer.MIN_VALUE;
+		}
 	}
 	
 	private class UtilityMenuItem extends JMenuItem {

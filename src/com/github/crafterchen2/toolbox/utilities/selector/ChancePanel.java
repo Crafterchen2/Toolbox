@@ -166,7 +166,12 @@ public class ChancePanel extends JPanel implements Utility {
     public Component createNewInstance() {
         return new ChancePanel();
     }
-
+    
+    @Override
+    public int getListPriority() {
+        return 2;
+    }
+    
     //Interne Klassen
     ////Klasse "ModuleViewPanel"
     static class ModuleViewPanel extends JPanel implements Scrollable {

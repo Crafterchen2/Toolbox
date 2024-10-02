@@ -47,6 +47,11 @@ public class LogoGenerator extends JPanel implements Utility {
 	public Component createNewInstance() {
 		return null;
 	}
+	
+	@Override
+	public int getListPriority() {
+		return 4;
+	}
 	//} Overrides
 }
 //} Classes
