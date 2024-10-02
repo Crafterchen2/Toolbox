@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 //Classes {
-public class ToolboxPanel extends JPanel implements Utility {
+public class ToolboxPanel extends JPanel implements Resettable {
 	
 	//Fields {
 	private final ArrayList<Utility> utilityList = createInitialUtilityList();
@@ -179,21 +179,6 @@ public class ToolboxPanel extends JPanel implements Utility {
 		removeFramedUtils();
 		utilityList.forEach(Resettable::reset);
 	}
-	
-	@Override
-	public String getUtilitiyName() {
-		return "Toolbox";
-	}
-	
-	@Override
-	public Component getComponent() {
-		return this;
-	}
-	
-	@Override
-	public Component createNewInstance() {
-		return new ToolboxPanel();
-	}
 	//} Overrides
 	
 	//Classes {
@@ -334,7 +319,6 @@ public class ToolboxPanel extends JPanel implements Utility {
 			});
 		}
 		//} Constructor
-		
 	}
 	//} Classes
 }
