@@ -17,5 +17,5 @@ It's the job of the Utility interface to privide the name of the utility, a way 
 how new instances of this type of utility should be created. Often, returning `this` for the `getComponent()` method suffices,
 when the implementing class also extends `java.awt.Component` in some way.
 ### More info
-This project is written using openjdk-22 and therefore produces a jar with the file format 66, thus requiring a very
+This project is written using openjdk-23 and therefore produces a jar with the file format 67, thus requiring a very
 up-to-date version of the java runtime.
