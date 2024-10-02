@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 
 //Classes {
+@Tool
 public class LogoGenerator extends JPanel implements Utility {
 	
 	//private final SimpleImagePainter zoomedDisplay;

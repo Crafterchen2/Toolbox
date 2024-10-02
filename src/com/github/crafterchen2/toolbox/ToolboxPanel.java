@@ -1,6 +1,7 @@
 package com.github.crafterchen2.toolbox;
 
 import com.github.crafterchen2.toolbox.component.MenuTools;
+import com.github.crafterchen2.toolbox.component.layout.MonoLayout;
 import com.github.crafterchen2.toolbox.component.tab.TabButton;
 import com.github.crafterchen2.toolbox.component.tab.TabLabel;
 import org.reflections.Reflections;
@@ -56,7 +57,11 @@ public class ToolboxPanel extends JPanel implements Utility {
 					if (util.getUtilitiyName() != null && !util.getUtilitiyName().isEmpty()) {
 						if (util.getComponent() != null && util.createNewInstance() != null) {
 							rv.add(util);
+						} else {
+							rv.add(new ErrorUtil(util.getClass().getName(), "No Component provided."));
 						}
+					} else {
+						rv.add(new ErrorUtil(util.getClass().getName(), "No name provided."));
 					}
 				} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 					e.printStackTrace();
@@ -188,6 +193,55 @@ public class ToolboxPanel extends JPanel implements Utility {
 	//} Overrides
 	
 	//Classes {
+	private static class ErrorUtil implements Utility {
+		
+		private final String name;
+		private final String reason;
+		
+		public ErrorUtil() {
+			this(null, null);
+		}
+		
+		public ErrorUtil(String name) {
+			this(name, null);
+		}
+		
+		public ErrorUtil(String name, String reason) {
+			if (name == null) name = "unknown";
+			if (reason == null) reason = "No reason provided.";
+			this.name = name;
+			this.reason = reason;
+		}
+		
+		@Override
+		public String getUtilitiyName() {
+			return name;
+		}
+		
+		@Override
+		public Component getComponent() {
+			JPanel c = new JPanel(new MonoLayout(10,10));
+			c.add(new JLabel(getUtilitiyName() + " failed to load. Reason: " + reason));
+			return c;
+		}
+		
+		@Override
+		public Component createNewInstance() {
+			return getComponent();
+		}
+		
+		@Override
+		public boolean canReset() {
+			return false;
+		}
+		
+		@Override
+		public void resetCode() {
+		
+		}
+		
+	}
+	
 	private class UtilityMenuItem extends JMenuItem {
 		
 		//Fields {
