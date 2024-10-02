@@ -2,12 +2,16 @@ package com.github.crafterchen2.toolbox.component.layout;
 
 import java.awt.*;
 
+//Classes {
 public class MonoLayout implements LayoutManager {
 	
+	//Fields {
 	private int index;
 	private int xGap;
 	private int yGap;
+	//} Fields
 	
+	//Constructor {
 	public MonoLayout() {
 		this(0);
 	}
@@ -26,14 +30,50 @@ public class MonoLayout implements LayoutManager {
 		this.xGap = xGap;
 		this.yGap = yGap;
 	}
+	//} Constructor
 	
-	private Dimension layoutSize(Container parent, Dimension comSize){
+	//Methods {
+	private Dimension layoutSize(Container parent, Dimension comSize) {
 		synchronized (parent.getTreeLock()) {
 			Insets insets = parent.getInsets();
 			return new Dimension((insets.left + insets.right) + (comSize.width + xGap), (insets.top + insets.bottom) + (comSize.height + yGap));
 		}
 	}
 	
+	private Component getIndexedComponent(Container parent) {
+		return parent.getComponents()[index % parent.getComponentCount()];
+	}
+	//} Methods
+	
+	//Getter {
+	public int getIndex() {
+		return index;
+	}
+	
+	public int getxGap() {
+		return xGap;
+	}
+	
+	public int getyGap() {
+		return yGap;
+	}
+	//} Getter
+	
+	//Setter {
+	public void setIndex(int index) {
+		this.index = index;
+	}
+	
+	public void setxGap(int xGap) {
+		this.xGap = xGap;
+	}
+	
+	public void setyGap(int yGap) {
+		this.yGap = yGap;
+	}
+	//} Setter
+	
+	//Overrides {
 	@Override
 	public void addLayoutComponent(String name, Component comp) {
 	
@@ -51,10 +91,6 @@ public class MonoLayout implements LayoutManager {
 		}
 	}
 	
-	private Component getIndexedComponent(Container parent) {
-		return parent.getComponents()[index % parent.getComponentCount()];
-	}
-	
 	@Override
 	public Dimension minimumLayoutSize(Container parent) {
 		synchronized (parent.getTreeLock()) {
@@ -64,10 +100,12 @@ public class MonoLayout implements LayoutManager {
 	
 	@Override
 	public void layoutContainer(Container parent) {
-		synchronized (parent.getTreeLock()){
+		synchronized (parent.getTreeLock()) {
 			Insets insets = parent.getInsets();
 			Dimension pSize = parent.getSize();
-			getIndexedComponent(parent).setBounds(insets.left + xGap,insets.top + yGap,pSize.width - insets.right - insets.left - (xGap * 2), pSize.height - insets.bottom - insets.top - (yGap * 2));
+			getIndexedComponent(parent).setBounds(insets.left + xGap, insets.top + yGap, pSize.width - insets.right - insets.left - (xGap * 2), pSize.height - insets.bottom - insets.top - (yGap * 2));
 		}
 	}
+	//} Overrides
 }
+//} Classes
