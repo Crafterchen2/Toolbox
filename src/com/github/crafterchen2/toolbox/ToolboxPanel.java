@@ -63,7 +63,11 @@ public class ToolboxPanel extends JPanel implements Resettable {
 						rv.add(new ErrorUtil(util.getClass().getName(), "Kein Name angegeben."));
 					}
 				} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-					rv.add(new ErrorUtil(clazz.getName(), "Objekt konnte nicht erstellt werden."));
+					StringBuilder err = new StringBuilder();
+					for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+						err.append(stackTraceElement.toString()).append('\n');
+					}
+					rv.add(new ErrorUtil(clazz.getName(), "Objekt konnte nicht erstellt werden\n\n" + err));
 				}
 			}
 		}
@@ -202,7 +206,7 @@ public class ToolboxPanel extends JPanel implements Resettable {
 			if (name == null) name = "Unbekannt";
 			if (reason == null) reason = "Kein Grund bekannt.";
 			this.name = name;
-			this.reason = reason;
+			this.reason = getUtilitiyName() + " konnte nicht geladen werden. Grund: " + reason;
 		}
 		//} Constructor
 		
@@ -215,7 +219,11 @@ public class ToolboxPanel extends JPanel implements Resettable {
 		@Override
 		public Component getComponent() {
 			JPanel c = new JPanel(new MonoLayout(10, 10));
-			c.add(new JLabel(getUtilitiyName() + " konnte nicht geladen werden. Grund: " + reason));
+			JTextArea area = new JTextArea(reason);
+			area.setLineWrap(true);
+			area.setWrapStyleWord(true);
+			area.setEditable(false);
+			c.add(new JScrollPane(area, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
 			return c;
 		}
 		
