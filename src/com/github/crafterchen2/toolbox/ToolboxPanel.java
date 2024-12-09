@@ -17,8 +17,9 @@ import java.util.Set;
 //Classes {
 public class ToolboxPanel extends JPanel implements Resettable {
 	
+	public final String[] toolSearchScope;
 	//Fields {
-	private final ArrayList<Utility> utilityList = createInitialUtilityList();
+	private final ArrayList<Utility> utilityList = new ArrayList<>();
 	
 	private final JTabbedPane tabs = new JTabbedPane(); //siehe kon: JTabbedPane(int tabPlacement, int tabLayoutPolicy) (tabLayoutPolicy sagt ob gescrollt wird oder nicht)
 	private final ArrayList<JFrame> framedUtils = new ArrayList<>();
@@ -30,6 +31,13 @@ public class ToolboxPanel extends JPanel implements Resettable {
 	}
 	
 	public ToolboxPanel(boolean showBar) {
+		this(showBar, ToolboxPanel.class.getPackageName());
+	}
+	
+	public ToolboxPanel(boolean showBar, String... toolSearchScope) {
+		super();
+		this.toolSearchScope = toolSearchScope;
+		addInitialUtilityList();
 		reset();
 		setLayout(new BorderLayout());
 		if (showBar) {
@@ -44,10 +52,8 @@ public class ToolboxPanel extends JPanel implements Resettable {
 		return new Dimension(Math.max(a.width, b.width), Math.max(a.height, b.height));
 	}
 	
-	private ArrayList<Utility> createInitialUtilityList() {
-		ArrayList<Utility> rv = new ArrayList<>();
-		Reflections reflections = new Reflections(new ConfigurationBuilder().forPackages("")  // Empty string means scan the entire classpath
-																			.addScanners(Scanners.TypesAnnotated));
+	private void addInitialUtilityList() {
+		Reflections reflections = new Reflections(new ConfigurationBuilder().forPackages(toolSearchScope).addScanners(Scanners.TypesAnnotated));
 		Set<Class<?>> annotatedClasses = reflections.getTypesAnnotatedWith(Tool.class);
 		for (Class<?> clazz : annotatedClasses) {
 			if (Utility.class.isAssignableFrom(clazz)) {
@@ -55,28 +61,27 @@ public class ToolboxPanel extends JPanel implements Resettable {
 					Utility util = (Utility) clazz.getDeclaredConstructor().newInstance();
 					if (util.getUtilitiyName() != null && !util.getUtilitiyName().isEmpty()) {
 						if (util.getComponent() != null && util.createNewInstance() != null) {
-							rv.add(util);
+							utilityList.add(util);
 						} else {
-							rv.add(new ErrorUtil(util.getClass().getName(), "Kein Component angegeben."));
+							utilityList.add(new ErrorUtil(util.getClass().getName(), "Kein Component angegeben."));
 						}
 					} else {
-						rv.add(new ErrorUtil(util.getClass().getName(), "Kein Name angegeben."));
+						utilityList.add(new ErrorUtil(util.getClass().getName(), "Kein Name angegeben."));
 					}
 				} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 					StringBuilder err = new StringBuilder();
 					for (StackTraceElement stackTraceElement : e.getStackTrace()) {
 						err.append(stackTraceElement.toString()).append('\n');
 					}
-					rv.add(new ErrorUtil(clazz.getName(), "Objekt konnte nicht erstellt werden\n\n" + err));
+					utilityList.add(new ErrorUtil(clazz.getName(), "Objekt konnte nicht erstellt werden.\n\n" + err));
 				}
 			}
 		}
-		rv.sort((u1, u2) -> {
+		utilityList.sort((u1, u2) -> {
 			int prioSort = -Integer.compare(u1.getListPriority(), u2.getListPriority());
 			if (prioSort == 0) return String.CASE_INSENSITIVE_ORDER.compare(u1.getUtilitiyName(), u2.getUtilitiyName());
 			return prioSort;
 		});
-		return rv;
 	}
 	
 	private void resetTabs() {

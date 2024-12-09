@@ -3,6 +3,10 @@
     <output-path>$PROJECT_DIR$/out/artifacts/Toolbox</output-path>
     <root id="archive" name="Toolbox.jar">
       <element id="module-output" name="Utilities" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/reflections-0.10.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/javassist-3.28.0-GA.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jsr305-3.0.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/slf4j-api-1.7.32.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
