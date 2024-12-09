@@ -12,17 +12,20 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+//Classes {
 @Tool
 public class SizeFinder extends JPanel implements Utility {
 	
-	private boolean busy = false;
-	private SizeNode currentData;
-	
+	//Fields {
 	private final FilePickerField pathField = new FilePickerField();
 	private final JButton startStop = new JButton();
 	private final DefaultTreeModel model = new DefaultTreeModel(new DefaultMutableTreeNode("No Data", true));
 	private final ComboBoxModel<FileSizes> sizeGate = new DefaultComboBoxModel<>(FileSizes.values());
+	private boolean busy = false;
+	private SizeNode currentData;
+	//} Fields
 	
+	//Constructor {
 	public SizeFinder() {
 		super(new BorderLayout());
 		reset();
@@ -38,20 +41,51 @@ public class SizeFinder extends JPanel implements Utility {
 		
 		add(pathField, BorderLayout.NORTH);
 		add(new JScrollPane(tree), BorderLayout.CENTER);
-		JPanel buttons = new JPanel(new GridLayout(1,5));
-			buttons.add(startStop);
-			buttons.add(new JComboBox<>(sizeGate));
-			buttons.add(outCsv);
-			buttons.add(outData);
-			buttons.add(inData);
+		JPanel buttons = new JPanel(new GridLayout(1, 5));
+		buttons.add(startStop);
+		buttons.add(new JComboBox<>(sizeGate));
+		buttons.add(outCsv);
+		buttons.add(outData);
+		buttons.add(inData);
 		add(buttons, BorderLayout.SOUTH);
 	}
+	//} Constructor
 	
-	private FileSizes getGate() {
-		return (FileSizes) sizeGate.getSelectedItem();
+	//Methods {
+	//Original version created and developed by https://github.com/Apfeltasche20
+	//Used with permission.
+	public static void getFolderSize(File folder, SizeNode parent, long gate) {
+		if (folder == null) {
+			SizeNode errNode = new SizeNode(new ArrayList<>(), 0, "Fehler beim Erstellen: Kein Ordner angegeben.");
+			parent.add(errNode);
+			return;
+		}
+		SizeNode me = new SizeNode(new ArrayList<>(), 0, folder);
+		File[] files = folder.listFiles();
+		
+		if (files == null) return;
+		
+		for (File file : files) {
+			if (file.isFile()) {
+				long fileLength = file.length();
+				if (fileLength / gate > 0) {
+					me.addChild(new SizeNode(new ArrayList<>(), fileLength, file));
+				}
+				me.addSize(fileLength);
+			} else {
+				getFolderSize(file, me, gate);
+			}
+		}
+		parent.add(me);
 	}
 	
-	private void reassembleModel(){
+	public static SizeNode getFolderSize(File folder, FileSizes gate) {
+		SizeNode wrapper = new SizeNode(new ArrayList<>(), 0, folder);
+		getFolderSize(folder, wrapper, gate.sizeInBytes);
+		return wrapper.getNodes().getFirst();
+	}
+	
+	private void reassembleModel() {
 		currentData = new SizeNode(new ArrayList<>(), 0, makeRootName());
 		FileSizes gate = getGate();
 		if (gate == null) gate = FileSizes.B;
@@ -82,40 +116,15 @@ public class SizeFinder extends JPanel implements Utility {
 			}
 		}
 	}
+	//} Methods
 	
-	//Original version created and developed by https://github.com/Apfeltasche20
-	//Used with permission.
-	public static void getFolderSize(File folder, SizeNode parent, long gate) {
-		if (folder == null) {
-			SizeNode errNode = new SizeNode(new ArrayList<>(), 0, "Fehler beim Erstellen: Kein Ordner angegeben.");
-			parent.add(errNode);
-			return;
-		}
-		SizeNode me = new SizeNode(new ArrayList<>(), 0, folder);
-		File[] files = folder.listFiles();
-		
-		if(files == null) return;
-		
-		for (File file : files) {
-			if (file.isFile()) {
-				long fileLength = file.length();
-				if (fileLength / gate > 0) {
-					me.addChild(new SizeNode(new ArrayList<>(), fileLength, file));
-				}
-				me.addSize(fileLength);
-			} else {
-				getFolderSize(file, me, gate);
-			}
-		}
-		parent.add(me);
+	//Getter {
+	private FileSizes getGate() {
+		return (FileSizes) sizeGate.getSelectedItem();
 	}
+	//} Getter
 	
-	public static SizeNode getFolderSize(File folder, FileSizes gate) {
-		SizeNode wrapper = new SizeNode(new ArrayList<>(), 0, folder);
-		getFolderSize(folder, wrapper, gate.sizeInBytes);
-		return wrapper.getNodes().getFirst();
-	}
-	
+	//Overrides {
 	@Override
 	public String getUtilitiyName() {
 		return "Size Finder";
@@ -144,5 +153,7 @@ public class SizeFinder extends JPanel implements Utility {
 		model.setRoot(new DefaultMutableTreeNode(currentData.getRepresentation(getGate()), true));
 		sizeGate.setSelectedItem(FileSizes.values()[0]);
 	}
+	//} Overrides
 }
 
+//} Classes
