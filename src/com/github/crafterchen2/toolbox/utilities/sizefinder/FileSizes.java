@@ -2,7 +2,7 @@ package com.github.crafterchen2.toolbox.utilities.sizefinder;
 
 public enum FileSizes {
 	
-	B(1, "B"),
+	B(1, true),
 	KB(B.sizeInBytes * 1000),
 	MB(KB.sizeInBytes * 1000),
 	GB(MB.sizeInBytes * 1000),
@@ -15,15 +15,25 @@ public enum FileSizes {
 	
 	final long sizeInBytes;
 	final String name;
+	final boolean isAtomic;
 	
 	FileSizes(long sizeInBytes) {
-		this(sizeInBytes, null);
+		this(sizeInBytes, null, false);
+	}
+	
+	FileSizes(long sizeInBytes, boolean isAtomic) {
+		this(sizeInBytes, null, isAtomic);
 	}
 	
 	FileSizes(long sizeInBytes, String name) {
+		this(sizeInBytes, name, false);
+	}
+	
+	FileSizes(long sizeInBytes, String name, boolean isAtomic) {
 		if (sizeInBytes < 1) throw new IllegalArgumentException("sizeInBytes must be at least 1.");
 		this.sizeInBytes = sizeInBytes;
 		this.name = (name != null) ? name : super.toString();
+		this.isAtomic = isAtomic;
 	}
 	
 	
