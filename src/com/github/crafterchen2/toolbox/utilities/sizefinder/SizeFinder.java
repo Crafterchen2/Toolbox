@@ -18,11 +18,16 @@ public class SizeFinder extends JPanel implements Utility {
 	
 	//Fields {
 	private final FilePickerField pathField = new FilePickerField();
-	private final JButton startStop = new JButton();
+	private final JButton startButton = new JButton("Start");
+	private final JButton stopButton = new JButton("Stop");
 	private final DefaultTreeModel model = new DefaultTreeModel(new DefaultMutableTreeNode("No Data", true));
 	private final ComboBoxModel<FileSizes> sizeGate = new DefaultComboBoxModel<>(FileSizes.values());
+	private final JPanel buttons;
+	private final JPanel loadingLayout;
 	private boolean busy = false;
+	private int progress = 0;
 	private SizeNode currentData;
+	private Thread thread;
 	//} Fields
 	
 	//Constructor {
@@ -37,17 +42,23 @@ public class SizeFinder extends JPanel implements Utility {
 		
 		pathField.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		
-		startStop.addActionListener(_ -> reassembleModel());
+		startButton.addActionListener(_ -> reassembleModel());
+		stopButton.addActionListener(_ -> stopReassemble());
 		
 		add(pathField, BorderLayout.NORTH);
 		add(new JScrollPane(tree), BorderLayout.CENTER);
-		JPanel buttons = new JPanel(new GridLayout(1, 5));
-		buttons.add(startStop);
+		buttons = new JPanel(new GridLayout(1, 5));
+		buttons.add(startButton);
 		buttons.add(new JComboBox<>(sizeGate));
 		buttons.add(outCsv);
 		buttons.add(outData);
 		buttons.add(inData);
 		add(buttons, BorderLayout.SOUTH);
+		loadingLayout = new JPanel(new BorderLayout());
+		loadingLayout.add(stopButton, BorderLayout.WEST);
+		JProgressBar progressBar = new JProgressBar(0, 100);
+		progressBar.setIndeterminate(true);
+		loadingLayout.add(progressBar, BorderLayout.CENTER);
 	}
 	//} Constructor
 	
@@ -66,6 +77,9 @@ public class SizeFinder extends JPanel implements Utility {
 		if (files == null) return;
 		
 		for (File file : files) {
+			if (Thread.currentThread().isInterrupted()) {
+				return; // Exit if the thread is interrupted
+			}
 			if (file.isFile()) {
 				long fileLength = file.length();
 				if (fileLength / gate > 0) {
@@ -86,13 +100,36 @@ public class SizeFinder extends JPanel implements Utility {
 	}
 	
 	private void reassembleModel() {
-		currentData = new SizeNode(new ArrayList<>(), 0, makeRootName());
-		FileSizes gate = getGate();
-		if (gate == null) gate = FileSizes.B;
-		getFolderSize(pathField.getSelected(), currentData, gate.sizeInBytes);
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode(currentData.getRepresentation(getGate()), true);
-		buildTree(root, currentData);
-		model.setRoot(root);
+		thread = new Thread(() -> {
+			busy = true;
+			this.remove(buttons);
+			this.add(loadingLayout, BorderLayout.SOUTH);
+			this.updateUI();
+			currentData = new SizeNode(new ArrayList<>(), 0, makeRootName());
+			FileSizes gate = getGate();
+			if (gate == null) gate = FileSizes.B;
+			getFolderSize(pathField.getSelected(), currentData, gate.sizeInBytes);
+			if (thread.isInterrupted()) {
+				return;
+			}
+			DefaultMutableTreeNode root = new DefaultMutableTreeNode(currentData.getRepresentation(getGate()), true);
+			buildTree(root, currentData);
+			model.setRoot(root);
+			this.remove(loadingLayout);
+			this.add(buttons, BorderLayout.SOUTH);
+			this.updateUI();
+		});
+		thread.start();
+	}
+
+	private void stopReassemble() {
+		if (thread != null) {
+			thread.interrupt();
+		}
+		busy = false;
+		this.remove(loadingLayout);
+		this.add(buttons, BorderLayout.SOUTH);
+		this.updateUI();
 	}
 	
 	private String makeRootName() {
@@ -148,7 +185,6 @@ public class SizeFinder extends JPanel implements Utility {
 	@Override
 	public void resetCode() {
 		busy = false;
-		startStop.setText("Start");
 		currentData = new SizeNode(new ArrayList<>(), 0, "No Data");
 		model.setRoot(new DefaultMutableTreeNode(currentData.getRepresentation(getGate()), true));
 		sizeGate.setSelectedItem(FileSizes.values()[0]);
