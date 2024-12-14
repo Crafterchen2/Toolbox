@@ -17,8 +17,8 @@ import java.util.Set;
 //Classes {
 public class ToolboxPanel extends JPanel implements Resettable {
 	
-	public final String[] toolSearchScope;
 	//Fields {
+	public final String[] toolSearchScope;
 	private final ArrayList<Utility> utilityList = new ArrayList<>();
 	
 	private final JTabbedPane tabs = new JTabbedPane(); //siehe kon: JTabbedPane(int tabPlacement, int tabLayoutPolicy) (tabLayoutPolicy sagt ob gescrollt wird oder nicht)
@@ -171,7 +171,7 @@ public class ToolboxPanel extends JPanel implements Resettable {
 			try {
 				rv = getMaxDimension(rv, getUtility(i).getComponent().getMinimumSize());
 			} catch (Exception ignored) {
-			
+				
 			}
 		}
 		return getMaxDimension(rv, super.getMinimumSize());
@@ -244,7 +244,7 @@ public class ToolboxPanel extends JPanel implements Resettable {
 		
 		@Override
 		public void resetCode() {
-		
+			
 		}
 		
 		@Override
@@ -317,10 +317,12 @@ public class ToolboxPanel extends JPanel implements Resettable {
 						JMenu toolMenu = new JMenu("Tool");
 						toolMenu.add(MenuTools.item("Zurücksetzen", _ -> ((Utility) frame.getContentPane()).reset()));
 						toolMenu.add(MenuTools.item("Entfernen", _ -> frame.dispose()));
-						toolMenu.add(MenuTools.item("Zu Tab", "Schließt das Fenster und reiht sich wieder zu den Tabs ein.", _ -> {
-							addUtilToTabs(frame.getContentPane(), utilityID, frame.getTitle());
-							frame.dispose();
-						}));
+						toolMenu.add(MenuTools.item(
+								"Zu Tab", "Schließt das Fenster und reiht sich wieder zu den Tabs ein.", _ -> {
+									addUtilToTabs(frame.getContentPane(), utilityID, frame.getTitle());
+									frame.dispose();
+								}
+												   ));
 						bar.add(toolMenu);
 						frame.setJMenuBar(bar);
 						frame.setContentPane((Container) tabs.getComponent(tabIndex));

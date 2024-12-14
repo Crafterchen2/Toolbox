@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Objects;
 
+//Classes {
 public class SizeNode {
 	private final List<SizeNode> nodes;
 	private long size;
@@ -64,6 +65,7 @@ public class SizeNode {
 		size += toAdd;
 	}
 	
+	//Methods {
 	public String getRepresentation(FileSizes gate) {
 		double size = (double) this.size / gate.sizeInBytes;
 		StringBuilder rv = new StringBuilder();
@@ -77,6 +79,7 @@ public class SizeNode {
 		rv.append(getName());
 		return rv.toString();
 	}
+	//} Methods
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -92,3 +95,4 @@ public class SizeNode {
 		return Objects.hash(nodes, size);
 	}
 }
+//} Classes

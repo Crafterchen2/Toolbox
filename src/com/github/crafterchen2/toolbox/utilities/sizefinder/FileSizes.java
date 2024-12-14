@@ -1,5 +1,6 @@
 package com.github.crafterchen2.toolbox.utilities.sizefinder;
 
+//Enums {
 public enum FileSizes {
 	
 	B(1, true),
@@ -13,10 +14,13 @@ public enum FileSizes {
 	TIB(GIB.sizeInBytes * 1024, "TiB"),
 	;
 	
+	//Fields {
 	final long sizeInBytes;
 	final String name;
 	final boolean isAtomic;
+	//} Fields
 	
+	//Constructor {
 	FileSizes(long sizeInBytes) {
 		this(sizeInBytes, null, false);
 	}
@@ -35,10 +39,14 @@ public enum FileSizes {
 		this.name = (name != null) ? name : super.toString();
 		this.isAtomic = isAtomic;
 	}
+	//} Constructor
 	
 	
+	//Overrides {
 	@Override
 	public String toString() {
 		return name + ": " + sizeInBytes + " Byte" + ((sizeInBytes > 1) ? "s" : "");
 	}
+	//} Overrides
 }
+//} Enums

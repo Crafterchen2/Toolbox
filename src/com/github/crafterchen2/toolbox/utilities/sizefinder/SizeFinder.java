@@ -98,7 +98,7 @@ public class SizeFinder extends JPanel implements Utility {
 		}
 		parent.add(me);
 	}
-
+	
 	public static String getSmallRepresentation(long lsize, FileSizes gate) {
 		double size = (double) lsize / gate.sizeInBytes;
 		StringBuilder rv = new StringBuilder();
@@ -110,7 +110,13 @@ public class SizeFinder extends JPanel implements Utility {
 		rv.append(gate.name);
 		return rv.toString();
 	}
-
+	
+	public static SizeNode getFolderSize(File folder, FileSizes gate) {
+		SizeNode wrapper = new SizeNode(new ArrayList<>(), 0, folder);
+		getFolderSize(folder, wrapper, gate.sizeInBytes);
+		return wrapper.getNodes().getFirst();
+	}
+	
 	public void rootGetFolderSize(File folder, long gate) {
 		currentSize = 0;
 		if (folder == null) {
@@ -126,12 +132,12 @@ public class SizeFinder extends JPanel implements Utility {
 		progressBar.setMaximum(max);
 		progressBar.setStringPainted(true);
 		updateUI();
-
+		
 		SizeNode me = new SizeNode(new ArrayList<>(), 0, folder);
 		File[] files = folder.listFiles();
-
+		
 		if (files == null) return;
-
+		
 		for (int i = 0; i < files.length; i++) {
 			File file = files[i];
 			if (Thread.currentThread().isInterrupted()) {
@@ -146,17 +152,17 @@ public class SizeFinder extends JPanel implements Utility {
 				}
 				me.addSize(fileLength);
 				currentSize += fileLength;
-				progressLabel.setText("Size: " + getSmallRepresentation(currentSize,getGate()));
+				progressLabel.setText("Size: " + getSmallRepresentation(currentSize, getGate()));
 				updateUI();
 			} else {
 				internalGetFolderSize(file, me, gate);
 			}
-			progressBar.setValue(i+1);
+			progressBar.setValue(i + 1);
 			updateUI();
 		}
 		nextData.add(me);
 	}
-
+	
 	public void internalGetFolderSize(File folder, SizeNode parent, long gate) {
 		if (folder == null) {
 			SizeNode errNode = new SizeNode(new ArrayList<>(), 0, "Fehler beim Erstellen: Kein Ordner angegeben.");
@@ -165,9 +171,9 @@ public class SizeFinder extends JPanel implements Utility {
 		}
 		SizeNode me = new SizeNode(new ArrayList<>(), 0, folder);
 		File[] files = folder.listFiles();
-
+		
 		if (files == null) return;
-
+		
 		for (File file : files) {
 			if (Thread.currentThread().isInterrupted()) {
 				return; // Exit if the thread is interrupted
@@ -181,7 +187,7 @@ public class SizeFinder extends JPanel implements Utility {
 				}
 				me.addSize(fileLength);
 				currentSize += fileLength;
-				progressLabel.setText("Size: " + getSmallRepresentation(currentSize,getGate()));
+				progressLabel.setText("Size: " + getSmallRepresentation(currentSize, getGate()));
 				updateUI();
 			} else {
 				internalGetFolderSize(file, me, gate);
@@ -190,12 +196,6 @@ public class SizeFinder extends JPanel implements Utility {
 		parent.add(me);
 	}
 	
-	public static SizeNode getFolderSize(File folder, FileSizes gate) {
-		SizeNode wrapper = new SizeNode(new ArrayList<>(), 0, folder);
-		getFolderSize(folder, wrapper, gate.sizeInBytes);
-		return wrapper.getNodes().getFirst();
-	}
-
 	private int countFilesInRootDirectory(File root) {
 		if (root == null || !root.isDirectory()) {
 			return 0;
@@ -231,7 +231,7 @@ public class SizeFinder extends JPanel implements Utility {
 		});
 		thread.start();
 	}
-
+	
 	private void stopReassemble() {
 		if (thread != null) {
 			thread.interrupt();
