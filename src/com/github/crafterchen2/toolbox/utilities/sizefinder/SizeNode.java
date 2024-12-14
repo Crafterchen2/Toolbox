@@ -65,7 +65,9 @@ public class SizeNode {
 	}
 	
 	public String getRepresentation(FileSizes gate) {
-		return size + gate.name + ": " + getName();
+		double size = (double) this.size / gate.sizeInBytes;
+		//return size + gate.name + ": " + getName();
+		return String.format("%.2f%s: %s",size, gate.name, getName());
 	}
 	
 	@Override
