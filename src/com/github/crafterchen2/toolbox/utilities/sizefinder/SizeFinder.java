@@ -24,10 +24,14 @@ public class SizeFinder extends JPanel implements Utility {
 	private final ComboBoxModel<FileSizes> sizeGate = new DefaultComboBoxModel<>(FileSizes.values());
 	private final JPanel buttons;
 	private final JPanel loadingLayout;
+	private final JProgressBar progressBar;
+	private final JLabel progressLabel;
 	private boolean busy = false;
 	private int progress = 0;
+	private long currentSize = 0;
 	private SizeNode currentData;
 	private Thread thread;
+	private SizeNode nextData;
 	//} Fields
 	
 	//Constructor {
@@ -56,9 +60,11 @@ public class SizeFinder extends JPanel implements Utility {
 		add(buttons, BorderLayout.SOUTH);
 		loadingLayout = new JPanel(new BorderLayout());
 		loadingLayout.add(stopButton, BorderLayout.WEST);
-		JProgressBar progressBar = new JProgressBar(0, 100);
+		progressBar = new JProgressBar();
 		progressBar.setIndeterminate(true);
 		loadingLayout.add(progressBar, BorderLayout.CENTER);
+		progressLabel = new JLabel("Size: 0");
+		loadingLayout.add(progressLabel, BorderLayout.EAST);
 	}
 	//} Constructor
 	
@@ -92,11 +98,114 @@ public class SizeFinder extends JPanel implements Utility {
 		}
 		parent.add(me);
 	}
+
+	public static String getSmallRepresentation(long lsize, FileSizes gate) {
+		double size = (double) lsize / gate.sizeInBytes;
+		StringBuilder rv = new StringBuilder();
+		if (gate.isAtomic) {
+			rv.append((long) size);
+		} else {
+			rv.append(String.format("%.2f", size));
+		}
+		rv.append(gate.name);
+		return rv.toString();
+	}
+
+	public void rootGetFolderSize(File folder, long gate) {
+		currentSize = 0;
+		if (folder == null) {
+			SizeNode errNode = new SizeNode(new ArrayList<>(), 0, "Fehler beim Erstellen: Kein Ordner angegeben.");
+			nextData.add(errNode);
+			return;
+		}
+		progressBar.setIndeterminate(true);
+		progressBar.setStringPainted(false);
+		int max = countFilesInRootDirectory(folder);
+		progressBar.setIndeterminate(false);
+		progressBar.setValue(0);
+		progressBar.setMaximum(max);
+		progressBar.setStringPainted(true);
+		updateUI();
+
+		SizeNode me = new SizeNode(new ArrayList<>(), 0, folder);
+		File[] files = folder.listFiles();
+
+		if (files == null) return;
+
+		for (int i = 0; i < files.length; i++) {
+			File file = files[i];
+			if (Thread.currentThread().isInterrupted()) {
+				return; // Exit if the thread is interrupted
+			}
+			progressBar.setString(file.getName());
+			updateUI();
+			if (file.isFile()) {
+				long fileLength = file.length();
+				if (fileLength / gate > 0) {
+					me.addChild(new SizeNode(new ArrayList<>(), fileLength, file));
+				}
+				me.addSize(fileLength);
+				currentSize += fileLength;
+				progressLabel.setText("Size: " + getSmallRepresentation(currentSize,getGate()));
+				updateUI();
+			} else {
+				internalGetFolderSize(file, me, gate);
+			}
+			progressBar.setValue(i+1);
+			updateUI();
+		}
+		nextData.add(me);
+	}
+
+	public void internalGetFolderSize(File folder, SizeNode parent, long gate) {
+		if (folder == null) {
+			SizeNode errNode = new SizeNode(new ArrayList<>(), 0, "Fehler beim Erstellen: Kein Ordner angegeben.");
+			parent.add(errNode);
+			return;
+		}
+		SizeNode me = new SizeNode(new ArrayList<>(), 0, folder);
+		File[] files = folder.listFiles();
+
+		if (files == null) return;
+
+		for (File file : files) {
+			if (Thread.currentThread().isInterrupted()) {
+				return; // Exit if the thread is interrupted
+			}
+			progressBar.setString(file.getName());
+			updateUI();
+			if (file.isFile()) {
+				long fileLength = file.length();
+				if (fileLength / gate > 0) {
+					me.addChild(new SizeNode(new ArrayList<>(), fileLength, file));
+				}
+				me.addSize(fileLength);
+				currentSize += fileLength;
+				progressLabel.setText("Size: " + getSmallRepresentation(currentSize,getGate()));
+				updateUI();
+			} else {
+				internalGetFolderSize(file, me, gate);
+			}
+		}
+		parent.add(me);
+	}
 	
 	public static SizeNode getFolderSize(File folder, FileSizes gate) {
 		SizeNode wrapper = new SizeNode(new ArrayList<>(), 0, folder);
 		getFolderSize(folder, wrapper, gate.sizeInBytes);
 		return wrapper.getNodes().getFirst();
+	}
+
+	private int countFilesInRootDirectory(File root) {
+		if (root == null || !root.isDirectory()) {
+			return 0;
+		}
+		File[] files = root.listFiles();
+		if (files == null) {
+			return 0;
+		}
+		int fileCount = 0;
+		return files.length;
 	}
 	
 	private void reassembleModel() {
@@ -108,7 +217,8 @@ public class SizeFinder extends JPanel implements Utility {
 			currentData = new SizeNode(new ArrayList<>(), 0, makeRootName());
 			FileSizes gate = getGate();
 			if (gate == null) gate = FileSizes.B;
-			getFolderSize(pathField.getSelected(), currentData, gate.sizeInBytes);
+			nextData = currentData;
+			rootGetFolderSize(pathField.getSelected(), gate.sizeInBytes);
 			if (thread.isInterrupted()) {
 				return;
 			}
