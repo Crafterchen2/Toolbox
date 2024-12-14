@@ -11,7 +11,7 @@ public class SizeNode {
 	private final String path;
 	private final boolean isFolder;
 	
-	SizeNode(List<SizeNode> nodes, long size, String name) {
+	public SizeNode(List<SizeNode> nodes, long size, String name) {
 		this.nodes = nodes;
 		this.size = size;
 		this.name = name;
@@ -19,7 +19,7 @@ public class SizeNode {
 		isFolder = false;
 	}
 	
-	SizeNode(List<SizeNode> nodes, long size, File file) {
+	public SizeNode(List<SizeNode> nodes, long size, File file) {
 		this.nodes = nodes;
 		this.size = size;
 		name = file.getName();
@@ -66,8 +66,16 @@ public class SizeNode {
 	
 	public String getRepresentation(FileSizes gate) {
 		double size = (double) this.size / gate.sizeInBytes;
-		//return size + gate.name + ": " + getName();
-		return String.format("%.2f%s: %s",size, gate.name, getName());
+		StringBuilder rv = new StringBuilder();
+		if (gate.isAtomic) {
+			rv.append((long) size);
+		} else {
+			rv.append(String.format("%.2f", size));
+		}
+		rv.append(gate.name);
+		rv.append(": ");
+		rv.append(getName());
+		return rv.toString();
 	}
 	
 	@Override
