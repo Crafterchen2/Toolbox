@@ -1,6 +1,7 @@
 package com.github.crafterchen2.toolbox.utilities.comtest;
 
 import com.github.crafterchen2.toolbox.Tool;
+import com.github.crafterchen2.toolbox.component.ComponentComboBoxEditor;
 import com.github.crafterchen2.toolbox.component.FileNameFilter;
 import com.github.crafterchen2.toolbox.component.FilePickerField;
 import com.github.crafterchen2.toolbox.Utility;
@@ -27,6 +28,21 @@ public class ComponentTester extends JPanel implements Utility {
             fpt.clearHistory();
         });
         add(resetButton);
+        
+        int maxWrapper = 5;
+        ComponentComboBoxEditor.Wrapper[] wrappers = new ComponentComboBoxEditor.Wrapper[5];
+        for (int i = 0; i < maxWrapper; i++) {
+            JButton button = new JButton("text " + i);
+            int finalI = i;
+            button.addActionListener(_ -> System.out.println(finalI));
+            wrappers[i] = new ComponentComboBoxEditor.Wrapper(button, "text " + i);
+        }
+        
+        JComboBox<ComponentComboBoxEditor.Wrapper> box = new JComboBox<>(wrappers);
+        box.setEditor(new ComponentComboBoxEditor());
+        box.setEditable(true);
+        
+        add(box);
     }
 
     //Methoden
