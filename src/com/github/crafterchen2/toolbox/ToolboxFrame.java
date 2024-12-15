@@ -2,8 +2,12 @@ package com.github.crafterchen2.toolbox;
 
 import com.github.crafterchen2.toolbox.component.MenuTools;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.Objects;
 
 //Classes {
 public class ToolboxFrame extends JFrame {
@@ -58,6 +62,12 @@ public class ToolboxFrame extends JFrame {
 			}
 			if (iterator < args.length - 1) new ToolboxFrame(args, iterator + 1);
 		}
+        try {
+			BufferedImage icon = ImageIO.read(Objects.requireNonNull(getClass().getResource("/Toolbox.png")));
+			setIconImage(icon);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 		setVisible(true);
 	}
 	//} Constructor
